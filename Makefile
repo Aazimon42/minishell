@@ -6,7 +6,7 @@
 #    By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/27 17:10:17 by edi-maio          #+#    #+#              #
-#    Updated: 2026/01/27 17:10:56 by edi-maio         ###   ########.fr        #
+#    Updated: 2026/01/29 09:10:31 by edi-maio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,9 +16,9 @@ LIBFT = libft/libft.a
 
 CFLAGS = -Wall -Wextra -Werror
 
-INCLUDES = includes/
-
-C_FILES = main.c
+C_FILES = main.c \
+		  instruction.c \
+		  parse.c
 
 SRCS = $(addprefix srcs/,$(C_FILES))
 
@@ -33,7 +33,7 @@ $(LIBFT):
 	make -C libft all
 
 $(NAME): $(OBJS) $(LIBFT)
-	cc $(CFLAGS) $(OBJS) -I $(INCLUDES) $(LIBFT) -o $(NAME)
+	cc $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
 
 clean:
 	rm -f $(OBJS)

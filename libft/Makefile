@@ -6,7 +6,7 @@
 #    By: edi-maio <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:37:20 by edi-maio          #+#    #+#              #
-#    Updated: 2025/10/16 20:57:08 by edi-maio         ###   ########.fr        #
+#    Updated: 2026/01/29 04:15:00 by edi-maio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,7 +49,9 @@ SOURCES = ft_atoi.c \
 		ft_strtrim.c \
 		ft_substr.c \
 		ft_tolower.c \
-		ft_toupper.c
+		ft_toupper.c \
+		get_next_line.c \
+		get_next_line_utils.c
 
 OBJ = $(SOURCES:.c=.o)
 
