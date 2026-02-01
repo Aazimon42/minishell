@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 08:11:26 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/01/29 09:22:02 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/01 19:58:31 by malebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,20 @@ char	*ft_strndup(char *s1, int size)
 	return (s2);
 }
 
+t_instru	*clear_instru(t_instru *head)
+{
+	t_instru	*temp;
+
+	while (head)
+	{
+		temp = head;
+		free(head->str);
+		head = head->next;
+		free(temp);
+	}
+	return (NULL);
+}
+
 t_instru	*init_instruction(t_instru *before, char *value, int size, int type)
 {
 	t_instru	*temp;
@@ -41,5 +55,6 @@ t_instru	*init_instruction(t_instru *before, char *value, int size, int type)
 	temp->pre = before;
 	temp->str = ft_strndup(value, size);
 	temp->type = type;
+	temp->next = NULL;
 	return (temp);
 }

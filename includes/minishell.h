@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:01 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/01/29 10:15:20 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/01 19:34:06 by malebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,5 +41,5 @@ typedef struct s_instruction
 
 t_instru	*init_instruction(t_instru *before, char *value, int size, int type);
 t_instru	*slicer(char *str);
-
+t_instru    *clear_instru(t_instru *head);
 #endif

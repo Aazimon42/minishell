@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:47 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/01/29 10:26:06 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/01 19:54:35 by malebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,20 +39,19 @@ int	main(int ac, char **av)
 	if (ac != 1)
 		return (1);
 	(void)av;
-	print_rainbow("Minishell $> ");
+	instru = NULL;
 	while (1)
 	{
+		print_rainbow("Minishell $> ");
 		str = get_next_line(0);
 		if (str)
-		{
 			instru = slicer(str);
-			print_rainbow("Minishell $> ");
-		}
 		while (instru)
 		{
 			printf("value : %s, type : %d\n", instru->str, instru->type);
 			instru = instru->next;
 		}
+		instru = clear_instru(instru);
 	}
 	return (0);
 }
