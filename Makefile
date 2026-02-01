@@ -6,7 +6,7 @@
 #    By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/27 17:10:17 by edi-maio          #+#    #+#              #
-#    Updated: 2026/02/01 19:55:16 by malebrun         ###   ########.fr        #
+#    Updated: 2026/02/01 21:59:58 by edi-maio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ $(LIBFT):
 	make -C libft all
 
 $(NAME): $(OBJS) $(LIBFT)
-	cc $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+	cc $(CFLAGS) $(OBJS) $(LIBFT) -lreadline -o $(NAME)
 
 clean:
 	rm -f $(OBJS)

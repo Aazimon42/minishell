@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 05:02:40 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/01 19:50:50 by malebrun         ###   ########.fr       */
+/*   Updated: 2026/02/01 22:06:22 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,9 @@ t_instru	*slicer(char *str)
 	t_instru	*temp;
 	t_instru	*instru;
 
-	if (ft_strlen(str) == 1)
+	if (ft_strlen(str) == 0)
 		return (NULL);
 	i = 0;
-	str[ft_strlen(str) - 1] = '\0';
 	len = get_end_instru(str + i);
 	head = init_instruction(NULL, str + i, len, gtype(str + i, len));
 	instru = head;
