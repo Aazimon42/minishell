@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:47 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/01 22:47:00 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/03 07:05:04 by malebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,12 @@ int	main(int ac, char **av, char **env)
 {
 	char		*str;
 	t_instru	*instru;
+	t_envar		*envhead;
 
 	if (ac != 1)
 		return (1);
 	(void)av;
+	envhead = setup_envar(env);
 	instru = NULL;
 	while (1)
 	{
@@ -48,11 +50,7 @@ int	main(int ac, char **av, char **env)
 			continue ;
 		add_history(str);
 		instru = slicer(str);
-		while (instru)
-		{
-			printf("value : %s, type : %d\n", instru->str, instru->type);
-			instru = instru->next;
-		}
+		execute(instru, envhead);
 		instru = clear_instru(instru);
 	}
 }

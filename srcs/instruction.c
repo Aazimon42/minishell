@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 08:11:26 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/01 19:58:31 by malebrun         ###   ########.fr       */
+/*   Updated: 2026/02/03 08:35:31 by malebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,5 +56,7 @@ t_instru	*init_instruction(t_instru *before, char *value, int size, int type)
 	temp->str = ft_strndup(value, size);
 	temp->type = type;
 	temp->next = NULL;
+	temp->quotetype = 0;
+	handle_quote_type(temp);
 	return (temp);
 }

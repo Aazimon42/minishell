@@ -6,7 +6,7 @@
 #    By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/27 17:10:17 by edi-maio          #+#    #+#              #
-#    Updated: 2026/02/01 21:59:58 by edi-maio         ###   ########.fr        #
+#    Updated: 2026/02/03 07:07:15 by malebrun         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,12 @@ CFLAGS = -Wall -Wextra -Werror -g
 
 C_FILES = main.c \
 		  instruction.c \
-		  parse.c
+		  parse.c \
+		  builtin.c \
+		  exec.c \
+		  utils.c \
+		  envar.c \
+		  envcmd.c
 
 SRCS = $(addprefix srcs/,$(C_FILES))
 

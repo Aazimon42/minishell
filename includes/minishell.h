@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:01 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/01 22:45:49 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/03 08:12:56 by malebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <stdlib.h>
 
 # define RED "\033[91m"
 # define ORANGE "\033[93m"
@@ -39,11 +40,31 @@ typedef struct s_instruction
 	struct s_instruction	*next;
 	char					*str;
 	int						type;
+	int						quotetype;
 }		t_instru;
+
+typedef	struct s_envar
+{
+	struct s_envar	*next;
+	char			*name;
+	char			*value;
+}				t_envar;
 
 t_instru	*init_instruction(t_instru *before, char *value, int size, int type);
 t_instru	*slicer(char *str);
 t_instru    *clear_instru(t_instru *head);
 void		free2d(char **arr);
+int			builtincd(t_instru *instru);
+int			builtinecho(t_instru *instru);
+int 		builtinpwd();
+int 		builtinexport(t_instru *instru, t_envar *envhead);
+void    	transformtilde(t_instru *instru);
+void    	execute(t_instru *instru, t_envar *envhead);
+t_envar 	*setup_envar(char **env);
+void    	add_envar(char *name, char *value, t_envar *head);
+t_envar 	*setup_envar(char **env);
+int			ft_strcmp(const char *s1, const char *s2);
+char		*get_envar_name(char *str);
+char		*get_envar_value(char *str);
 
 #endif

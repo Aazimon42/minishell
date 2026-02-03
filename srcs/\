@@ -1,0 +1,51 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   envcmd.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/03 06:18:34 by malebrun          #+#    #+#             */
+/*   Updated: 2026/02/03 06:33:19 by malebrun         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+void	replace_env(t_envar *head, char *name, char *value)
+{
+	while (head)
+	{
+		if (!ft_strcmp(head->name, name))
+		{
+			free(head->value);
+			head->value = value;
+		}
+		head = head->next;
+	}
+}
+
+void	delete_env(t_envar *head, char *name)
+{
+	t_envar	*tmp;
+
+	tmp = head;
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->name, name))
+		{
+			head->next = tmp->next;
+			free(tmp->value);
+			free(tmp->name);
+			free(tmp);
+			break ;
+		}
+		head = tmp;
+		tmp = tmp->next;
+	}
+}
+
+int	builtinexport(t_instru *instru, t_envar *envar)
+{
+	
+}
