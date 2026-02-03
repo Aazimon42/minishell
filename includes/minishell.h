@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:01 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/03 09:46:15 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/03 13:38:14 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ t_instru    *clear_instru(t_instru *head);
 void		free2d(char **arr);
 int			builtincd(t_instru *instru);
 int			builtinecho(t_instru *instru);
-int 		builtinpwd();
+int 		builtinpwd(void);
 int 		builtinexport(t_instru *instru, t_envar *envhead);
 void    	transformtilde(t_instru *instru);
 void    	execute(t_instru *instru, t_envar *envhead);
@@ -71,5 +71,7 @@ void		print_export(t_envar *head);
 int			builtinunset(t_instru *instru, t_envar *head);
 int			builtinenv(t_envar *head);
 void		print_error(char *str);
+void		builtinexit(t_instru *instru, t_envar *head);
+char		*get_var(t_envar *head, char *name, int i);
 
 #endif

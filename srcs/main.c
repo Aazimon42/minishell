@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:47 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/03 07:05:04 by malebrun         ###   ########.fr       */
+/*   Updated: 2026/02/03 13:41:15 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,11 @@ int	main(int ac, char **av, char **env)
 			continue ;
 		add_history(str);
 		instru = slicer(str);
+		while (instru)
+		{
+			printf("Type:%d, Value:%s\n", instru->type, instru->str);
+			instru = instru->next;
+		}
 		execute(instru, envhead);
 		instru = clear_instru(instru);
 	}
