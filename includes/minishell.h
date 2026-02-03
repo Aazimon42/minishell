@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:01 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/03 08:51:14 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/03 09:46:15 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,5 +66,10 @@ t_envar 	*setup_envar(char **env);
 int			ft_strcmp(const char *s1, const char *s2);
 char		*get_envar_name(char *str);
 char		*get_envar_value(char *str);
+void		print_env(t_envar *head);
+void		print_export(t_envar *head);
+int			builtinunset(t_instru *instru, t_envar *head);
+int			builtinenv(t_envar *head);
+void		print_error(char *str);
 
 #endif

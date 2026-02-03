@@ -6,7 +6,7 @@
 #    By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/27 17:10:17 by edi-maio          #+#    #+#              #
-#    Updated: 2026/02/03 07:07:15 by malebrun         ###   ########.fr        #
+#    Updated: 2026/02/03 09:33:54 by edi-maio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,8 @@ C_FILES = main.c \
 		  exec.c \
 		  utils.c \
 		  envar.c \
-		  envcmd.c
+		  envcmd.c \
+		  printenv.c
 
 SRCS = $(addprefix srcs/,$(C_FILES))
 

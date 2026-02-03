@@ -6,29 +6,11 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 06:18:34 by malebrun          #+#    #+#             */
-/*   Updated: 2026/02/03 09:21:18 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/03 09:46:44 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-void	print_env(t_envar *head)
-{
-	int	len;
-
-	while (head)
-	{
-		len = ft_strlen(head->value);
-		printf("%s=", head->name);
-		if (len == 0)
-			printf("''\n");
-		else if (head->value[0] == ' ' || head->value[len - 1] == ' ')
-			printf("'%s'\n", head->value);
-		else
-			printf("%s\n", head->value);
-		head = head->next;
-	}
-}
 
 void	replace_envar(t_envar *head, char *name, char *value)
 {
@@ -84,7 +66,7 @@ int	builtinexport(t_instru *instru, t_envar *envar)
 	i = 1;
 	if (!instru->next || instru->next->type != TEXT)
 	{
-		print_env(envar);
+		print_export(envar);
 		return (i);
 	}
 	while (instru->next && instru->next->type == TEXT)
@@ -109,15 +91,30 @@ int	builtinexport(t_instru *instru, t_envar *envar)
 	return (i);
 }
 
+int	builtinenv(t_envar *head)
+{
+	print_env(head);
+	return (1);
+}
+
 int	builtinunset(t_instru *instru, t_envar *head)
 {
-	int	i;
+	int		i;
+	char	*name;
 
 	i = 1;
 	if (!instru->next || instru->next->type != TEXT)
 	{
-		perror("unset: ");
+		print_error("unset: not enough arguments\n");
 		return (i);
+	}
+	while (instru->next && instru->next->type == TEXT)
+	{
+		name = get_envar_name(instru->next->unquoted);
+		delete_envar(head, name);
+		free(name);
+		instru = instru->next;
+		i++;
 	}
 	return (i);
 }
