@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 05:24:02 by malebrun          #+#    #+#             */
-/*   Updated: 2026/02/03 07:00:15 by malebrun         ###   ########.fr       */
+/*   Updated: 2026/02/03 08:41:22 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,9 @@ char	*get_envar_value(char *str)
 	return (value);
 }
 
-static t_envar *init_envar(char *name, char *value)
+static t_envar	*init_envar(char *name, char *value)
 {
-	t_envar *result;
+	t_envar	*result;
 
 	result = malloc(sizeof(t_envar));
 	if (!result)
@@ -72,7 +72,7 @@ static t_envar *init_envar(char *name, char *value)
 
 void	add_envar(char *name, char *value, t_envar *head)
 {
-	t_envar *result;
+	t_envar	*result;
 
 	if (!head)
 		return ;
@@ -89,9 +89,9 @@ void	add_envar(char *name, char *value, t_envar *head)
 	head->next = result;
 }
 
-t_envar *setup_envar(char **env)
+t_envar	*setup_envar(char **env)
 {
-	int	i;
+	int		i;
 	t_envar	*head;
 
 	i = 1;

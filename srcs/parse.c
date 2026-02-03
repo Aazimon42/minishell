@@ -6,20 +6,20 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 05:02:40 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/03 02:05:46 by malebrun         ###   ########.fr       */
+/*   Updated: 2026/02/03 08:39:40 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int is_forbidenchar(char *str)
+static int	is_forbidenchar(char *str)
 {
 	if (!str)
 		return (0);
 	if (str[0] == '|' || str[0] == '<' || str[0] == '>')
 		return (1);
 	if (ft_strlen(str) > 1 && str[0] == '&' && str[1] == '&')
-		return(1);
+		return (1);
 	return (0);
 }
 

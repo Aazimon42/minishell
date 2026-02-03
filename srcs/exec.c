@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:43:03 by malebrun          #+#    #+#             */
-/*   Updated: 2026/02/03 07:45:25 by malebrun         ###   ########.fr       */
+/*   Updated: 2026/02/03 09:12:35 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ static int	builtexec(t_instru *instru, t_envar *envhead)
 		executed += builtinpwd(instru);
 	if (!ft_strcmp(instru->str, "export"))
 		executed += builtinexport(instru, envhead);
-	/*if (!ft_strcmp(instru->str, "unset"))
+	if (!ft_strcmp(instru->str, "unset"))
 		executed += builtinunset(instru, envhead);
-	if (!ft_strcmp(instru->str, "env"))
+	/*if (!ft_strcmp(instru->str, "env"))
 		executed += builtinenv(instru, envhead);
 	if (!ft_strcmp(instru->str, "exit"))
 		builtinexit(instru, envhead);*/

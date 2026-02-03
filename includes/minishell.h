@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:01 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/03 08:12:56 by malebrun         ###   ########.fr       */
+/*   Updated: 2026/02/03 08:51:14 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ typedef struct s_instruction
 	struct s_instruction	*pre;
 	struct s_instruction	*next;
 	char					*str;
+	char					*unquoted;
 	int						type;
-	int						quotetype;
 }		t_instru;
 
 typedef	struct s_envar

@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:25:40 by malebrun          #+#    #+#             */
-/*   Updated: 2026/02/03 06:18:26 by malebrun         ###   ########.fr       */
+/*   Updated: 2026/02/03 09:03:29 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	builtinecho(t_instru *instru)
 	}
 	while (instru->next && instru->next->type == TEXT)
 	{
-		printf("%s", instru->next->str);
+		printf("%s", instru->next->unquoted);
 		instru = instru->next;
 		if (instru && instru->type == TEXT)
 			printf(" ");
@@ -58,7 +58,7 @@ int	builtinecho(t_instru *instru)
 	return (i);
 }
 
-int	builtinpwd()
+int	builtinpwd(void)
 {
 	char	buffies[1024];
 
