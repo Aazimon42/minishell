@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/04 08:03:35 by malebrun          #+#    #+#             */
-/*   Updated: 2026/02/04 15:00:18 by malebrun         ###   ########.fr       */
+/*   Updated: 2026/02/04 15:46:10 by malebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,16 +53,21 @@ static void replaceenvar(t_instru *head, char *name, char *value, unsigned long 
 	k = 0;
 	j = 0;
 	i = 0;
+	if (!name || !value)
+		return ;
 	result = malloc(ft_strlen(head->str) - ft_strlen(name) + ft_strlen(value) + 1);
 	if (!result)
 		return ;
-	while (j != nbdollar)
+	while (j != nbdollar && head->str[i])
 	{
 		while (head->str[i] && head->str[i] != '$')
 			i++;
+		result[i] = head->str[i];
+		i++;
 		j++;
 	}
 	j = 0;
+	i--;
 	while (j < ft_strlen(value))
 	{
 		result[i + j] = value[j];
@@ -93,15 +98,23 @@ static void	expand(t_instru *head, t_envar *envar)
 	nbdollar = 0;
 	while (head->str[i])
 	{
+		fflush(stdout);
 		if (head->str[i] == '$')
 			nbdollar++;
+		fflush(stdout);
 		if ((i == 0 && head->str[i] == '\"') || (i > 0 && head->str[i] == '\"' && head->str[i - 1] != '\\'))
 			inbadquote++;
+		fflush(stdout);
 		if ((head->str[i] == '$' && head->str[i + 1] && head->str[i + 1] != ' ') && inbadquote % 2 == 0)
 		{
 			temp = get_evname(&head->str[i]);
+			printf("4");
+			fflush(stdout);
 			replaceenvar(head, temp,get_evvalue(temp, envar), nbdollar);
+			printf("5");
+			fflush(stdout);
 			nbdollar = 0;
+			inbadquote = 0;
 			i = 0;
 		} else {
 			i++;
