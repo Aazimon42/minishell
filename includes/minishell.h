@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:01 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/03 13:38:14 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/04 15:03:01 by malebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,5 +73,5 @@ int			builtinenv(t_envar *head);
 void		print_error(char *str);
 void		builtinexit(t_instru *instru, t_envar *head);
 char		*get_var(t_envar *head, char *name, int i);
-
+void		handle_envar(t_instru *head, t_envar *envar);
 #endif

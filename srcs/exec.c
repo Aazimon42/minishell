@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:43:03 by malebrun          #+#    #+#             */
-/*   Updated: 2026/02/03 13:39:44 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/04 15:03:47 by malebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ void	execute(t_instru *instru, t_envar *envhead)
 
 	while (instru)
 	{
+		handle_envar(instru, envhead);
 		i = builtexec(instru, envhead) + 1;
 		while (i > 0)
 		{
