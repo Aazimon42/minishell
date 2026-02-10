@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/04 08:03:35 by malebrun          #+#    #+#             */
-/*   Updated: 2026/02/04 15:46:10 by malebrun         ###   ########.fr       */
+/*   Updated: 2026/02/10 14:56:13 by malebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,24 @@
 static char	*get_evname(char *str)
 {
 	int		i;
+	int		j;
 	char	*result;
+
 	i = 0;
+	if (str[0] == '$')
+		str++;
 	while (str[i] && str[i] != ' ')
 		i++;
-	result = malloc(sizeof(char) * i);
+	result = malloc(sizeof(char) * (i + 1));
 	if (!result)
 		return (NULL);
-	i = 1;
-	while (str[i] && str[i] != ' ')
+	j = 0;
+	while (j < i)
 	{
-		result[i] = str[i];
-		i++;
+		result[j] = str[j];
+		j++;
 	}
-	result[i] = '\0';
+	result[j] = '\0';
 	return (result);
 }
 
@@ -43,7 +47,7 @@ static char	*get_evvalue(char *str, t_envar *envar)
 	return (NULL);
 }
 
-static void replaceenvar(t_instru *head, char *name, char *value, unsigned long nbdollar)
+static void replaceenvar(t_instru *head, char *name, char *value, unsigned long pos)
 {
 	int i;
 	unsigned long j;
@@ -53,34 +57,21 @@ static void replaceenvar(t_instru *head, char *name, char *value, unsigned long 
 	k = 0;
 	j = 0;
 	i = 0;
-	if (!name || !value)
+	if (!name)
 		return ;
+	if (!value)
+		value = "";
 	result = malloc(ft_strlen(head->str) - ft_strlen(name) + ft_strlen(value) + 1);
 	if (!result)
 		return ;
-	while (j != nbdollar && head->str[i])
-	{
-		while (head->str[i] && head->str[i] != '$')
-			i++;
-		result[i] = head->str[i];
-		i++;
-		j++;
-	}
-	j = 0;
-	i--;
-	while (j < ft_strlen(value))
-	{
-		result[i + j] = value[j];
-		j++;
-	}
-	j = i + j;
-	i = i + ft_strlen(name);
-	while(head->str[i])
-	{
-		result[j] = head->str[i];
-		i++;
-		j++;
-	}
+	while (i < (int)pos)
+		result[j++] = head->str[i++];
+	k = 0;
+	while (value[k])
+		result[j++] = value[k++];
+	i = pos + ft_strlen(name) + 1;
+	while (head->str[i])
+		result[j++] = head->str[i++];
 	result[j] = '\0';
 	free(head->str);
 	free(name);
@@ -98,24 +89,19 @@ static void	expand(t_instru *head, t_envar *envar)
 	nbdollar = 0;
 	while (head->str[i])
 	{
-		fflush(stdout);
 		if (head->str[i] == '$')
 			nbdollar++;
-		fflush(stdout);
 		if ((i == 0 && head->str[i] == '\"') || (i > 0 && head->str[i] == '\"' && head->str[i - 1] != '\\'))
 			inbadquote++;
-		fflush(stdout);
 		if ((head->str[i] == '$' && head->str[i + 1] && head->str[i + 1] != ' ') && inbadquote % 2 == 0)
 		{
 			temp = get_evname(&head->str[i]);
-			printf("4");
-			fflush(stdout);
-			replaceenvar(head, temp,get_evvalue(temp, envar), nbdollar);
-			printf("5");
-			fflush(stdout);
+			printf("\nprereplacement = %s", head->str);
+			replaceenvar(head, temp,get_evvalue(temp, envar), i);
+			printf("\nreplaced envar = %s", head->str);
 			nbdollar = 0;
 			inbadquote = 0;
-			i = 0;
+			i++;
 		} else {
 			i++;
 		}
@@ -124,6 +110,8 @@ static void	expand(t_instru *head, t_envar *envar)
 
 void	handle_envar(t_instru *head, t_envar *envar)
 {
+	if (head && head->next && head->type != TEXT && head->next->type == TEXT)
+		head = head->next;
 	while (head && head->type == TEXT)
 	{
 		expand(head, envar);
