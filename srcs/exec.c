@@ -6,45 +6,63 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:43:03 by malebrun          #+#    #+#             */
-/*   Updated: 2026/02/10 18:03:31 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/12 15:38:03 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-/*static void	replace_var(t_instru *instru, t_envar *head)
+char	*ft_join_instru(t_instru *instru)
 {
-	int		i;
-	int		j;
-	char	*value;
+	char	*tmp;
+	char	*cmd;
 
-	while (instru && instru->type == TEXT)
+	cmd = ft_strdup(instru->str);
+	if (!cmd)
+		return (0);
+	while (instru->next && instru->next->type == TEXT)
 	{
-		i = 0;
-		while (instru->str[i])
-		{
-			j = 0;
-			if (instru->str[i] == '\'')
-			{
-				while (instru->str[i] && instru->str[i] != '\'')
-					i++;
-				if (instru->str[i] == '\'')
-					i++;
-			}
-			if (instru->str[i] == '$')
-			{
-				j = 0;
-				while (instru->str[i] && instru->str[i] != ' ')
-				{
-					i++;
-					j++;
-				}
-				value = get_var(head, instru->str + i, j);
-			}
-		}
+		tmp = cmd;
+		cmd = ft_strjoin(cmd, instru->next->str);
+		free(tmp);
+		if (!cmd)
+			return (0);
+		tmp = cmd;
+		cmd = ft_strjoin(cmd, " ");
+		free(tmp);
+		if (!cmd)
+			return (0);
 		instru = instru->next;
 	}
-}*/
+	return (cmd);
+}
+
+void	executeve(t_instru *instru, char **env)
+{
+	char	**split_cmd;
+	char	*cmd;
+	char	*path;
+
+	cmd = ft_join_instru(instru);
+	split_cmd = ft_split(cmd, ' ');
+	if (access(cmd, F_OK | X_OK) == 0)
+		path = split_cmd[0];
+	else
+		path = get_cmd(split_cmd[0], env);
+	free(cmd);
+	if (!path)
+	{
+		free(path);
+		free2d(split_cmd);
+		exit(127);
+	}
+	if (execve(path, split_cmd, env) == -1)
+	{
+		free(path);
+		free2d(split_cmd);
+		return ;
+	}
+}
 
 static int	builtexec(t_instru *instru, t_envar *envhead)
 {
@@ -65,6 +83,8 @@ static int	builtexec(t_instru *instru, t_envar *envhead)
 		executed += builtinenv(envhead);
 	if (!ft_strcmp(instru->str, "exit"))
 		builtinexit(instru, envhead);
+	else
+		executeve(instru, envhead);
 	return (executed);
 }
 

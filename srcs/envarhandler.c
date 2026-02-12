@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/04 08:03:35 by malebrun          #+#    #+#             */
-/*   Updated: 2026/02/10 19:01:01 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/11 18:54:18 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,27 +81,31 @@ static void	replaceenvar(t_instru *head, char *name, char *value, int pos)
 static void	expand(t_instru *head, t_envar *envar)
 {
 	int		i;
-	int		inbadquote;
+	int		in_single;
+	int		in_double;
 	char	*temp;
 
-	inbadquote = 0;
 	i = 0;
+	in_single = 0;
+	in_double = 0;
 	while (head->str[i])
 	{
-		if ((i == 0 && head->str[i] == '\'')
-			|| (i > 0 && head->str[i] == '\'' && head->str[i - 1] != '\\'))
-			inbadquote++;
-		if ((head->str[i] == '$' && head->str[i + 1] && head->str[i + 1] != ' ')
-			&& inbadquote % 2 == 0)
+		if (head->str[i] == '\'' && !in_double)
+			in_single = !in_single;
+		else if (head->str[i] == '"' && !in_single)
+			in_double = !in_double;
+		else if (head->str[i] == '$' && head->str[i + 1]
+			&& head->str[i + 1] != ' ' && !in_single)
 		{
 			temp = get_evname(&head->str[i]);
 			replaceenvar(head, temp, get_evvalue(temp, envar), i);
 			free(head->unquoted);
-			head->unquoted = ft_unquote(head->str, ft_strlen(head->str));
+			head->unquoted = head->str;
+			if (in_double)
+				head->unquoted = ft_unquote(head->str, ft_strlen(head->str));
 			i++;
 		}
-		else
-			i++;
+		i++;
 	}
 }
 
