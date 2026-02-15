@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 22:20:30 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/01 22:44:47 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/15 21:14:26 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,31 +26,6 @@ static char	*get_path(char **env)
 	return (NULL);
 }
 
-char	*ft_strcat(char *s1, char *s2)
-{
-	char	*result;
-	int		i;
-	int		j;
-
-	result = malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
-	if (!result)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (s1[i])
-	{
-		result[i] = s1[i];
-		i++;
-	}
-	while (s2[j])
-	{
-		result[i + j] = s2[j];
-		j++;
-	}
-	result[i + j] = '\0';
-	return (result);
-}
-
 char	*get_cmd(char *cmd, char **env)
 {
 	char	*path;
@@ -65,8 +40,19 @@ char	*get_cmd(char *cmd, char **env)
 	i = 0;
 	while (possible[i])
 	{
-		temp = ft_strcat(possible[i], "/");
-		path = ft_strcat(temp, cmd);
+		temp = ft_strjoin(possible[i], "/");
+		if (!temp)
+		{
+			free2d(possible);
+			return (0);
+		}
+		path = ft_strjoin(temp, cmd);
+		if (!path)
+		{
+			free2d(possible);
+			free(temp);
+			return (0);
+		}
 		free(temp);
 		if (access(path, F_OK | X_OK) == 0)
 		{

@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:43:03 by malebrun          #+#    #+#             */
-/*   Updated: 2026/02/12 15:38:03 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/15 21:23:18 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,36 +37,43 @@ char	*ft_join_instru(t_instru *instru)
 	return (cmd);
 }
 
-void	executeve(t_instru *instru, char **env)
+void	executeve(t_instru *instru, t_envar *envhead)
 {
 	char	**split_cmd;
 	char	*cmd;
 	char	*path;
+	char	**env;
 
 	cmd = ft_join_instru(instru);
+	env = split_env(envhead);
 	split_cmd = ft_split(cmd, ' ');
-	if (access(cmd, F_OK | X_OK) == 0)
+	if (access(split_cmd[0], F_OK | X_OK) == 0)
 		path = split_cmd[0];
 	else
 		path = get_cmd(split_cmd[0], env);
 	free(cmd);
 	if (!path)
 	{
+		printf("prout");
 		free(path);
 		free2d(split_cmd);
-		exit(127);
+		free2d(env);
+		return ;
 	}
 	if (execve(path, split_cmd, env) == -1)
 	{
+		printf("caca");
 		free(path);
 		free2d(split_cmd);
+		free2d(env);
 		return ;
 	}
 }
 
 static int	builtexec(t_instru *instru, t_envar *envhead)
 {
-	int	executed;
+	int		executed;
+	pid_t	pid1;
 
 	executed = 0;
 	if (!ft_strcmp(instru->str, "cd"))
@@ -84,7 +91,12 @@ static int	builtexec(t_instru *instru, t_envar *envhead)
 	if (!ft_strcmp(instru->str, "exit"))
 		builtinexit(instru, envhead);
 	else
-		executeve(instru, envhead);
+	{
+		pid1 = fork();
+		if (pid1 == 0)
+			executeve(instru, envhead);
+		waitpid(pid1, NULL, 0);
+	}
 	return (executed);
 }
 

@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:01 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/12 15:24:26 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/15 21:10:46 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <stdlib.h>
+# include <sys/wait.h>
 
 # define RED "\033[91m"
 # define ORANGE "\033[93m"
@@ -76,5 +77,8 @@ char		*get_var(t_envar *head, char *name, int i);
 void		handle_envar(t_instru *head, t_envar *envar);
 char		*ft_unquote(char *s1, int size);
 char		*get_cmd(char *cmd, char **env);
+void		ft_strcpy(char *dest, char *src);
+void		ft_strcat(char *dest, char *src);
+char		**split_env(t_envar *envhead);
 
 #endif

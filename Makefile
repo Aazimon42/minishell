@@ -6,7 +6,7 @@
 #    By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/27 17:10:17 by edi-maio          #+#    #+#              #
-#    Updated: 2026/02/04 14:52:16 by malebrun         ###   ########.fr        #
+#    Updated: 2026/02/15 21:11:54 by edi-maio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,9 @@ C_FILES = main.c \
 		  envcmd.c \
 		  printenv.c \
 		  exit.c \
-		  envarhandler.c
+		  envarhandler.c \
+		  utils2.c \
+		  path.c
 
 SRCS = $(addprefix srcs/,$(C_FILES))
 
