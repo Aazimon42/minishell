@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:43:03 by malebrun          #+#    #+#             */
-/*   Updated: 2026/02/15 21:23:18 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/23 22:45:42 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ char	*ft_join_instru(t_instru *instru)
 	while (instru->next && instru->next->type == TEXT)
 	{
 		tmp = cmd;
-		cmd = ft_strjoin(cmd, instru->next->str);
+		cmd = ft_strjoin(cmd, " ");
 		free(tmp);
 		if (!cmd)
 			return (0);
 		tmp = cmd;
-		cmd = ft_strjoin(cmd, " ");
+		cmd = ft_strjoin(cmd, instru->next->str);
 		free(tmp);
 		if (!cmd)
 			return (0);
@@ -52,19 +52,10 @@ void	executeve(t_instru *instru, t_envar *envhead)
 	else
 		path = get_cmd(split_cmd[0], env);
 	free(cmd);
-	if (!path)
+	if (!path || execve(path, split_cmd, env) == -1)
 	{
-		printf("prout");
-		free(path);
-		free2d(split_cmd);
-		free2d(env);
-		return ;
-	}
-	if (execve(path, split_cmd, env) == -1)
-	{
-		printf("caca");
-		free(path);
-		free2d(split_cmd);
+		if (path)
+			free(path);
 		free2d(env);
 		return ;
 	}
@@ -78,17 +69,17 @@ static int	builtexec(t_instru *instru, t_envar *envhead)
 	executed = 0;
 	if (!ft_strcmp(instru->str, "cd"))
 		executed += builtincd(instru);
-	if (!ft_strcmp(instru->str, "echo"))
+	else if (!ft_strcmp(instru->str, "echo"))
 		executed += builtinecho(instru);
-	if (!ft_strcmp(instru->str, "pwd"))
+	else if (!ft_strcmp(instru->str, "pwd"))
 		executed += builtinpwd();
-	if (!ft_strcmp(instru->str, "export"))
+	else if (!ft_strcmp(instru->str, "export"))
 		executed += builtinexport(instru, envhead);
-	if (!ft_strcmp(instru->str, "unset"))
+	else if (!ft_strcmp(instru->str, "unset"))
 		executed += builtinunset(instru, envhead);
-	if (!ft_strcmp(instru->str, "env"))
+	else if (!ft_strcmp(instru->str, "env"))
 		executed += builtinenv(envhead);
-	if (!ft_strcmp(instru->str, "exit"))
+	else if (!ft_strcmp(instru->str, "exit"))
 		builtinexit(instru, envhead);
 	else
 	{
@@ -96,6 +87,7 @@ static int	builtexec(t_instru *instru, t_envar *envhead)
 		if (pid1 == 0)
 			executeve(instru, envhead);
 		waitpid(pid1, NULL, 0);
+		executed = 1;
 	}
 	return (executed);
 }
@@ -103,15 +95,26 @@ static int	builtexec(t_instru *instru, t_envar *envhead)
 void	execute(t_instru *instru, t_envar *envhead)
 {
 	int	i;
+	int	std;
 
 	while (instru)
 	{
+		i = 0;
+		std = -1;
 		handle_envar(instru, envhead);
-		i = builtexec(instru, envhead) + 1;
-		while (i > 0)
+		if (instru->next && instru->next->type == SEPARATOR
+			&& instru->next->str[0] && instru->next->str[1]
+			&& instru->next->str[0] == '<' && instru->next->str[1] == '<')
+			std = handle_heredoc(instru->next);
+		i += builtexec(instru, envhead) + 1;
+		if (std != -1)
 		{
-			if (instru)
-				instru = instru->next;
+			dup2(std, STDIN_FILENO);
+			close(std);
+		}
+		while (i > 0 && instru)
+		{
+			instru = instru->next;
 			i--;
 		}
 	}

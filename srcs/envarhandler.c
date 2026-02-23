@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/04 08:03:35 by malebrun          #+#    #+#             */
-/*   Updated: 2026/02/11 18:54:18 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/23 19:52:10 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,9 +100,12 @@ static void	expand(t_instru *head, t_envar *envar)
 			temp = get_evname(&head->str[i]);
 			replaceenvar(head, temp, get_evvalue(temp, envar), i);
 			free(head->unquoted);
-			head->unquoted = head->str;
+			head->unquoted = ft_strdup(head->str);
 			if (in_double)
+			{
+				free(head->unquoted);
 				head->unquoted = ft_unquote(head->str, ft_strlen(head->str));
+			}
 			i++;
 		}
 		i++;

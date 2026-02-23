@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 08:11:26 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/12 15:20:32 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/23 19:55:19 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,20 +81,6 @@ char	*ft_strndup(char *s1, int size)
 		i++;
 	}
 	return (s2);
-}
-
-t_instru	*clear_instru(t_instru *head)
-{
-	t_instru	*temp;
-
-	while (head)
-	{
-		temp = head;
-		free(head->str);
-		head = head->next;
-		free(temp);
-	}
-	return (NULL);
 }
 
 t_instru	*init_instruction(t_instru *before, char *value, int size, int type)

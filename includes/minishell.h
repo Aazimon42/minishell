@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:01 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/15 21:10:46 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/23 22:41:51 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef	struct s_envar
 
 t_instru	*init_instruction(t_instru *before, char *value, int size, int type);
 t_instru	*slicer(char *str);
-t_instru    *clear_instru(t_instru *head);
+void		free_instru(t_instru *instru);
 void		free2d(char **arr);
 int			builtincd(t_instru *instru);
 int			builtinecho(t_instru *instru);
@@ -80,5 +80,6 @@ char		*get_cmd(char *cmd, char **env);
 void		ft_strcpy(char *dest, char *src);
 void		ft_strcat(char *dest, char *src);
 char		**split_env(t_envar *envhead);
+int			handle_heredoc(t_instru *instru);
 
 #endif

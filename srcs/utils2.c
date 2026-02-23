@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 20:56:07 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/15 21:03:19 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/23 18:43:38 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char	**split_env(t_envar *envhead)
 	int		i;
 
 	count = env_size(envhead);
-	env = malloc(sizeof(char *) * count);
+	env = malloc(sizeof(char *) * (count + 1));
 	if (!env)
 		return (0);
 	i = 0;
@@ -71,6 +71,7 @@ char	**split_env(t_envar *envhead)
 		env[i] = malloc(sizeof(char) * (ft_strlen(envhead->name) + ft_strlen(envhead->value) + 2));
 		if (!env[i])
 		{
+			env[i] = NULL;
 			free2d(env);
 			return (0);
 		}
@@ -80,5 +81,6 @@ char	**split_env(t_envar *envhead)
 		envhead = envhead->next;
 		i++;
 	}
+	env[i] = NULL;
 	return (env);
 }

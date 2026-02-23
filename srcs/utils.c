@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 22:45:17 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/03 12:14:09 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/23 18:42:30 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	free2d(char **arr)
 		i++;
 	}
 	free(arr);
+	arr = NULL;
 }
 
 int	ft_strcmp(const char *s1, const char *s2)
