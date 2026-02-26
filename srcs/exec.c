@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:43:03 by malebrun          #+#    #+#             */
-/*   Updated: 2026/02/26 19:26:13 by malebrun         ###   ########.fr       */
+/*   Updated: 2026/02/26 19:57:33 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,26 +97,33 @@ static int	builtexec(t_instru *instru, t_envar *envhead)
 void	execute(t_instru *instru, t_envar *envhead)
 {
 	int	i;
-	int	std;
+	int	save_stdout;
+	int	save_stdin;
 
 	while (instru)
 	{
 		i = 0;
-		std = -1;
+		save_stdin = -1;
+		save_stdout = -1;
 		handle_envar(instru, envhead);
 		if (instru->next && instru->next->type == SEPARATOR
-			&& instru->next->str[0] && instru->next->str[1]
 			&& instru->next->str[0] == '<' && instru->next->str[1] == '<')
-			std = handle_heredoc(instru->next);
-		//printf("%s", instru->next->str);
-		//printf("\n%d", ft_strlen(instru->next->str) == 1);
+			save_stdin = handle_heredoc(instru->next);
 		if (instru->next && next_sep_is_redirect(instru->next))
-			std = handle_redirect(instru->next);
-		i += builtexec(instru, envhead) + 1;
-		if (std != -1)
 		{
-			dup2(std, STDIN_FILENO);
-			close(std);
+			save_stdout = dup(STDOUT_FILENO);
+			handle_redirect(instru->next);
+		}
+		i += builtexec(instru, envhead) + 1;
+		if (save_stdin != -1)
+		{
+			dup2(save_stdin, STDIN_FILENO);
+			close(save_stdin);
+		}
+		if (save_stdout != -1)
+		{
+			dup2(save_stdout, STDOUT_FILENO);
+			close(save_stdout);
 		}
 		while (i > 0 && instru)
 		{
