@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:43:03 by malebrun          #+#    #+#             */
-/*   Updated: 2026/02/26 19:57:33 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/26 20:11:23 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,11 @@ void	execute(t_instru *instru, t_envar *envhead)
 		if (instru->next && next_sep_is_redirect(instru->next))
 		{
 			save_stdout = dup(STDOUT_FILENO);
-			handle_redirect(instru->next);
+			if (!handle_redirect(instru->next))
+			{
+				printf("Minishell: %s: Permission denied\n", instru->next->next->next->str);
+				return ;
+			}
 		}
 		i += builtexec(instru, envhead) + 1;
 		if (save_stdin != -1)
