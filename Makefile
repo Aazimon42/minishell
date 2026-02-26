@@ -6,7 +6,7 @@
 #    By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/27 17:10:17 by edi-maio          #+#    #+#              #
-#    Updated: 2026/02/23 22:09:48 by edi-maio         ###   ########.fr        #
+#    Updated: 2026/02/26 17:09:32 by malebrun         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,8 @@ C_FILES = main.c \
 		  envarhandler.c \
 		  utils2.c \
 		  path.c \
-		  heredoc.c
+		  heredoc.c \
+		  redirection.c
 
 SRCS = $(addprefix srcs/,$(C_FILES))
 

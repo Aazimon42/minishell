@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:01 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/23 22:41:51 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/26 19:27:17 by malebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,5 +81,6 @@ void		ft_strcpy(char *dest, char *src);
 void		ft_strcat(char *dest, char *src);
 char		**split_env(t_envar *envhead);
 int			handle_heredoc(t_instru *instru);
-
+int			handle_redirect(t_instru *instru);
+int			next_sep_is_redirect(t_instru *instru);
 #endif

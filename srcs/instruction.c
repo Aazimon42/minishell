@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 08:11:26 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/23 19:55:19 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/26 18:03:45 by malebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,11 @@ int	ft_unquote_len(char *s1, int size)
 			if (s1[i] == quote)
 				i++;
 		}
-		i++;
-		len++;
+		else
+		{
+			i++;
+			len++;
+		}
 	}
 	return (len);
 }

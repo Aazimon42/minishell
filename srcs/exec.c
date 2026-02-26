@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:43:03 by malebrun          #+#    #+#             */
-/*   Updated: 2026/02/23 22:45:42 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/02/26 19:26:13 by malebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ static int	builtexec(t_instru *instru, t_envar *envhead)
 		if (pid1 == 0)
 			executeve(instru, envhead);
 		waitpid(pid1, NULL, 0);
+		if (pid1 == 0)
+			exit(0);
 		executed = 1;
 	}
 	return (executed);
@@ -106,6 +108,10 @@ void	execute(t_instru *instru, t_envar *envhead)
 			&& instru->next->str[0] && instru->next->str[1]
 			&& instru->next->str[0] == '<' && instru->next->str[1] == '<')
 			std = handle_heredoc(instru->next);
+		//printf("%s", instru->next->str);
+		//printf("\n%d", ft_strlen(instru->next->str) == 1);
+		if (instru->next && next_sep_is_redirect(instru->next))
+			std = handle_redirect(instru->next);
 		i += builtexec(instru, envhead) + 1;
 		if (std != -1)
 		{
