@@ -6,7 +6,7 @@
 #    By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/27 17:10:17 by edi-maio          #+#    #+#              #
-#    Updated: 2026/02/26 19:54:22 by edi-maio         ###   ########.fr        #
+#    Updated: 2026/03/01 19:50:15 by edi-maio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,8 @@ C_FILES = main.c \
 		  utils2.c \
 		  path.c \
 		  heredoc.c \
-		  redirection.c
+		  redirection.c \
+		  exec_utils.c
 
 SRCS = $(addprefix srcs/,$(C_FILES))
 
@@ -39,7 +40,7 @@ OBJS = $(SRCS:.c=.o)
 .o: .c
 	cc $(CFLAGS) -I $(INCLUDES) -c $< -o $@
 
-all: $(NAME)
+all: $(NAME) clean
 
 $(LIBFT):
 	make -C libft all

@@ -6,36 +6,11 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:43:03 by malebrun          #+#    #+#             */
-/*   Updated: 2026/02/26 20:11:23 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/01 20:17:24 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-char	*ft_join_instru(t_instru *instru)
-{
-	char	*tmp;
-	char	*cmd;
-
-	cmd = ft_strdup(instru->str);
-	if (!cmd)
-		return (0);
-	while (instru->next && instru->next->type == TEXT)
-	{
-		tmp = cmd;
-		cmd = ft_strjoin(cmd, " ");
-		free(tmp);
-		if (!cmd)
-			return (0);
-		tmp = cmd;
-		cmd = ft_strjoin(cmd, instru->next->str);
-		free(tmp);
-		if (!cmd)
-			return (0);
-		instru = instru->next;
-	}
-	return (cmd);
-}
 
 void	executeve(t_instru *instru, t_envar *envhead)
 {
@@ -94,45 +69,57 @@ static int	builtexec(t_instru *instru, t_envar *envhead)
 	return (executed);
 }
 
+int	apply_redirections(t_instru *cmd, int heredoc_fd)
+{
+	t_instru	*tmp;
+	int			separator;
+
+	if (heredoc_fd == -2)
+		return (0);
+	if (heredoc_fd != -1)
+		dup2(heredoc_fd, STDIN_FILENO);
+	if (heredoc_fd != -1)
+		close(heredoc_fd);
+	tmp = cmd;
+	while (tmp && (tmp->type != SEPARATOR || ft_strcmp(tmp->str, "|")))
+	{
+		separator = get_redir_type(tmp);
+		if (separator == R_OUT)
+			handle_redirect(tmp);
+		else if (separator == R_APPEND)
+			handle_append(tmp);
+		else if (separator == R_IN)
+			handle_redirect_in(tmp);
+		if (separator)
+			tmp = tmp->next;
+		if (tmp)
+			tmp = tmp->next;
+	}
+	return (1);
+}
+
+int	execute_one_command(t_instru *cmd, t_envar *env)
+{
+	int	save_stdin;
+	int	save_stdout;
+
+	save_stdin = dup(STDIN_FILENO);
+	save_stdout = dup(STDOUT_FILENO);
+	if (!apply_redirections(cmd, collect_heredocs(cmd)))
+	{
+		restore_fds(save_stdin, save_stdout);
+		return (0);
+	}
+	builtexec(cmd, env);
+	restore_fds(save_stdin, save_stdout);
+	return (1);
+}
+
 void	execute(t_instru *instru, t_envar *envhead)
 {
-	int	i;
-	int	save_stdout;
-	int	save_stdin;
-
 	while (instru)
 	{
-		i = 0;
-		save_stdin = -1;
-		save_stdout = -1;
-		handle_envar(instru, envhead);
-		if (instru->next && instru->next->type == SEPARATOR
-			&& instru->next->str[0] == '<' && instru->next->str[1] == '<')
-			save_stdin = handle_heredoc(instru->next);
-		if (instru->next && next_sep_is_redirect(instru->next))
-		{
-			save_stdout = dup(STDOUT_FILENO);
-			if (!handle_redirect(instru->next))
-			{
-				printf("Minishell: %s: Permission denied\n", instru->next->next->next->str);
-				return ;
-			}
-		}
-		i += builtexec(instru, envhead) + 1;
-		if (save_stdin != -1)
-		{
-			dup2(save_stdin, STDIN_FILENO);
-			close(save_stdin);
-		}
-		if (save_stdout != -1)
-		{
-			dup2(save_stdout, STDOUT_FILENO);
-			close(save_stdout);
-		}
-		while (i > 0 && instru)
-		{
-			instru = instru->next;
-			i--;
-		}
+		execute_one_command(instru, envhead);
+		instru = skip_current_command(instru);
 	}
 }

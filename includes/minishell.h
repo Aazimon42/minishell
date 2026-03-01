@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:01 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/26 19:27:17 by malebrun         ###   ########.fr       */
+/*   Updated: 2026/03/01 20:22:26 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,26 +44,36 @@ typedef struct s_instruction
 	int						type;
 }		t_instru;
 
-typedef	struct s_envar
+typedef struct s_envar
 {
 	struct s_envar	*next;
 	char			*name;
 	char			*value;
 }				t_envar;
 
-t_instru	*init_instruction(t_instru *before, char *value, int size, int type);
+typedef enum e_redir
+{
+	R_NONE = 0,
+	R_IN = 1,
+	R_OUT = 2,
+	R_APPEND = 3,
+	R_HEREDOC = 4
+}	t_redir;
+
+t_instru	*init_instruction(t_instru *before,
+				char *value, int size, int type);
 t_instru	*slicer(char *str);
 void		free_instru(t_instru *instru);
 void		free2d(char **arr);
 int			builtincd(t_instru *instru);
 int			builtinecho(t_instru *instru);
-int 		builtinpwd(void);
-int 		builtinexport(t_instru *instru, t_envar *envhead);
-void    	transformtilde(t_instru *instru);
-void    	execute(t_instru *instru, t_envar *envhead);
-t_envar 	*setup_envar(char **env);
-void    	add_envar(char *name, char *value, t_envar *head);
-t_envar 	*setup_envar(char **env);
+int			builtinpwd(void);
+int			builtinexport(t_instru *instru, t_envar *envhead);
+void		transformtilde(t_instru *instru);
+void		execute(t_instru *instru, t_envar *envhead);
+t_envar		*setup_envar(char **env);
+void		add_envar(char *name, char *value, t_envar *head);
+t_envar		*setup_envar(char **env);
 int			ft_strcmp(const char *s1, const char *s2);
 char		*get_envar_name(char *str);
 char		*get_envar_value(char *str);
@@ -83,4 +93,12 @@ char		**split_env(t_envar *envhead);
 int			handle_heredoc(t_instru *instru);
 int			handle_redirect(t_instru *instru);
 int			next_sep_is_redirect(t_instru *instru);
+char		*ft_join_instru(t_instru *instru);
+t_redir		get_redir_type(t_instru *node);
+void		restore_fds(int save_stdin, int save_stdout);
+t_instru	*skip_current_command(t_instru *node);
+int			collect_heredocs(t_instru *cmd);
+int			handle_append(t_instru *instru);
+int			handle_redirect_in(t_instru *instru);
+
 #endif

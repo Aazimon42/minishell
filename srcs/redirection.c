@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 16:40:02 by malebrun          #+#    #+#             */
-/*   Updated: 2026/02/26 19:55:01 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/01 20:17:03 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,38 @@ int	handle_redirect(t_instru *instru)
 
 	if (!instru->next || !instru->next->str)
 		return (0);
-	fd = open(instru->next->next->str, O_CREAT | O_TRUNC | O_WRONLY, 0644);
+	fd = open(instru->next->str, O_CREAT | O_TRUNC | O_WRONLY, 0644);
 	if (fd == -1)
 		return (0);
 	dup2(fd, STDOUT_FILENO);
+	close(fd);
+	return (1);
+}
+
+int	handle_append(t_instru *instru)
+{
+	int	fd;
+
+	if (!instru->next || !instru->next->str)
+		return (-1);
+	fd = open(instru->next->str, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (fd == -1)
+		return (-1);
+	dup2(fd, STDOUT_FILENO);
+	close(fd);
+	return (1);
+}
+
+int	handle_redirect_in(t_instru *instru)
+{
+	int	fd;
+
+	if (!instru->next || !instru->next->str)
+		return (-1);
+	fd = open(instru->next->str, O_RDONLY);
+	if (fd == -1)
+		return (-1);
+	dup2(fd, STDIN_FILENO);
 	close(fd);
 	return (1);
 }

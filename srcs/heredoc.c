@@ -6,53 +6,95 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 21:37:30 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/23 22:44:13 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/01 20:03:41 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int	ft_heredoc(char *str)
+static void	read_heredoc(int fd_write, char *delimiter)
+{
+	char	*line;
+
+	while (1)
+	{
+		line = readline("> ");
+		if (!line || ft_strcmp(line, delimiter) == 0)
+		{
+			if (line)
+				free(line);
+			break ;
+		}
+		write(fd_write, line, ft_strlen(line));
+		write(fd_write, "\n", 1);
+		free(line);
+	}
+	close(fd_write);
+	exit(0);
+}
+
+int	read_heredoc_to_fd(char *delimiter)
 {
 	int		fd[2];
-	char	*line;
 	pid_t	pid;
-	int		save_stdin;
 
-	pipe(fd);
+	if (pipe(fd) == -1)
+		return (-1);
 	pid = fork();
-	save_stdin = dup(STDIN_FILENO);
+	if (pid == -1)
+	{
+		close(fd[0]);
+		close(fd[1]);
+		return (-1);
+	}
 	if (pid == 0)
 	{
 		close(fd[0]);
-		while (1)
-		{
-			line = readline("> ");
-			if (!line || ft_strcmp(line, str) == 0)
-			{
-				free(line);
-				break ;
-			}
-			write(fd[1], line, ft_strlen(line));
-			write(fd[1], "\n", 1);
-			free(line);
-		}
-		close(fd[1]);
-		exit(0);
+		read_heredoc(fd[1], delimiter);
 	}
-	else
-	{
-		close(fd[1]);
-		waitpid(pid, NULL, 0);
-		dup2(fd[0], STDIN_FILENO);
-		close(fd[0]);
-	}
-	return (save_stdin);
+	close(fd[1]);
+	waitpid(pid, NULL, 0);
+	return (fd[0]);
 }
 
 int	handle_heredoc(t_instru *instru)
 {
-	if (instru->next)
-		return (ft_heredoc(instru->next->str));
-	return (-1);
+	int	fd;
+
+	if (!instru->next || !instru->next->str)
+		return (-1);
+	fd = read_heredoc_to_fd(instru->next->str);
+	if (fd == -1)
+		return (-1);
+	dup2(fd, STDIN_FILENO);
+	close(fd);
+	return (1);
+}
+
+int	collect_heredocs(t_instru *cmd)
+{
+	t_instru	*tmp;
+	int			last_fd;
+	int			fd;
+
+	last_fd = -1;
+	tmp = cmd;
+	while (tmp && (tmp->type != SEPARATOR || ft_strcmp(tmp->str, "|")))
+	{
+		if (get_redir_type(tmp) == R_HEREDOC)
+		{
+			if (!tmp->next || !tmp->next->str)
+				return (-2);
+			fd = read_heredoc_to_fd(tmp->next->str);
+			if (fd == -1)
+				return (-2);
+			if (last_fd != -1)
+				close(last_fd);
+			last_fd = fd;
+			tmp = tmp->next;
+		}
+		if (tmp)
+			tmp = tmp->next;
+	}
+	return (last_fd);
 }
