@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:43:03 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/01 20:17:24 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/03 18:25:05 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void	executeve(t_instru *instru, t_envar *envhead)
 static int	builtexec(t_instru *instru, t_envar *envhead)
 {
 	int		executed;
-	pid_t	pid1;
 
 	executed = 0;
 	if (!ft_strcmp(instru->str, "cd"))
@@ -57,15 +56,7 @@ static int	builtexec(t_instru *instru, t_envar *envhead)
 	else if (!ft_strcmp(instru->str, "exit"))
 		builtinexit(instru, envhead);
 	else
-	{
-		pid1 = fork();
-		if (pid1 == 0)
-			executeve(instru, envhead);
-		waitpid(pid1, NULL, 0);
-		if (pid1 == 0)
-			exit(0);
-		executed = 1;
-	}
+		fork_and_exec(instru, envhead);
 	return (executed);
 }
 
@@ -117,6 +108,11 @@ int	execute_one_command(t_instru *cmd, t_envar *env)
 
 void	execute(t_instru *instru, t_envar *envhead)
 {
+	if (count_pipes(instru) > 0)
+	{
+		execute_pipeline(instru, envhead);
+		return ;
+	}
 	while (instru)
 	{
 		execute_one_command(instru, envhead);

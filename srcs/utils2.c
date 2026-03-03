@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 20:56:07 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/01 18:07:16 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/03 18:41:27 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,4 +109,3 @@ char	*ft_join_instru(t_instru *instru)
 	}
 	return (cmd);
 }
-

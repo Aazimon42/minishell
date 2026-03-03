@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:01 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/01 20:22:26 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/03 18:34:45 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,5 +100,10 @@ t_instru	*skip_current_command(t_instru *node);
 int			collect_heredocs(t_instru *cmd);
 int			handle_append(t_instru *instru);
 int			handle_redirect_in(t_instru *instru);
+int			apply_redirections(t_instru *cmd, int heredoc_fd);
+void		executeve(t_instru *instru, t_envar *envhead);
+void		fork_and_exec(t_instru *instru, t_envar *envhead);
+int			count_pipes(t_instru *instru);
+void		execute_pipeline(t_instru *instru, t_envar *env);
 
 #endif
