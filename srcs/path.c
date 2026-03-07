@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 22:20:30 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/23 18:15:51 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/07 03:17:29 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,42 +26,47 @@ static char	*get_path(char **env)
 	return (NULL);
 }
 
+static char	*get_cmd_logic(char *path, char **possible, int i, char *cmd)
+{
+	char	*temp;
+
+	while (possible[i])
+	{
+		temp = ft_strjoin(possible[i], "/");
+		if (!temp)
+		{
+			return (NULL);
+		}
+		path = ft_strjoin(temp, cmd);
+		if (!path)
+		{
+			free(temp);
+			return (NULL);
+		}
+		free(temp);
+		if (access(path, F_OK | X_OK) == 0)
+			return (path);
+		free(path);
+		i++;
+	}
+	return (NULL);
+}
+
 char	*get_cmd(char *cmd, char **env)
 {
 	char	*path;
 	char	**possible;
 	int		i;
-	char	*temp;
+	char	*result;
 
 	path = get_path(env);
 	if (!path)
 		return (NULL);
 	possible = ft_split(path + 5, ':');
 	i = 0;
-	while (possible[i])
-	{
-		temp = ft_strjoin(possible[i], "/");
-		if (!temp)
-		{
-			free2d(possible);
-			return (0);
-		}
-		path = ft_strjoin(temp, cmd);
-		if (!path)
-		{
-			free2d(possible);
-			free(temp);
-			return (0);
-		}
-		free(temp);
-		if (access(path, F_OK | X_OK) == 0)
-		{
-			free2d(possible);
-			return (path);
-		}
-		free(path);
-		i++;
-	}
+	result = get_cmd_logic(path, possible, i, cmd);
 	free2d(possible);
+	if (result)
+		return (result);
 	return (NULL);
 }

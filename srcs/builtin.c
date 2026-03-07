@@ -6,18 +6,19 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:25:40 by malebrun          #+#    #+#             */
-/*   Updated: 2026/02/10 14:38:01 by malebrun         ###   ########.fr       */
+/*   Updated: 2026/03/07 07:45:52 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	builtincd(t_instru *instru)
+int	builtincd(t_instru *instru, t_shell *shell)
 {
 	if (!instru->next || (instru->next->type != TEXT))
 	{
 		if (chdir(getenv("HOME")) == -1)
 			perror("cd :");
+		shell->exit_status = 1;
 		return (1);
 	}
 	if (instru->next->str[0] == '~')
@@ -25,12 +26,14 @@ int	builtincd(t_instru *instru)
 	if (chdir(instru->next->str) == -1)
 	{
 		perror("cd :");
+		shell->exit_status = 1;
 		return (1);
 	}
+	shell->exit_status = 0;
 	return (2);
 }
 
-int	builtinecho(t_instru *instru)
+int	builtinecho(t_instru *instru, t_shell *shell)
 {
 	int	newline;
 	int	i;
@@ -55,16 +58,23 @@ int	builtinecho(t_instru *instru)
 	}
 	if (newline)
 		printf("\n");
+	shell->exit_status = 0;
 	return (i);
 }
 
-int	builtinpwd(void)
+int	builtinpwd(t_shell *shell)
 {
 	char	buffies[1024];
 
 	if (getcwd(buffies, 1024) != NULL)
+	{
 		printf("%s\n", buffies);
+		shell->exit_status = 0;
+	}
 	else
+	{
 		perror("getcwd");
+		shell->exit_status = 1;
+	}
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 06:18:34 by malebrun          #+#    #+#             */
-/*   Updated: 2026/02/03 09:46:44 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/07 08:31:02 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,6 @@
 
 void	replace_envar(t_envar *head, char *name, char *value)
 {
-	if (ft_strlen(value) == 0)
-	{
-		free(value);
-		return ;
-	}
 	while (head)
 	{
 		if (!ft_strcmp(head->name, name))
@@ -56,7 +51,7 @@ t_envar	*delete_envar(t_envar *head, char *name)
 	return (head);
 }
 
-int	builtinexport(t_instru *instru, t_envar *envar)
+int	builtinexport(t_instru *instru, t_envar *envar, t_shell *shell)
 {
 	int		i;
 	char	*name;
@@ -71,33 +66,34 @@ int	builtinexport(t_instru *instru, t_envar *envar)
 	}
 	while (instru->next && instru->next->type == TEXT)
 	{
-		found = 0;
 		tmp = envar;
 		name = get_envar_name(instru->next->unquoted);
-		i += 1;
-		while (tmp)
+		if (!is_fullalnum(name))
 		{
-			if (!ft_strcmp(tmp->name, name))
-			{
-				replace_envar(envar, name, get_envar_value(instru->next->unquoted));
-				found = 1;
-			}
-			tmp = tmp->next;
+			print_error("minishell: export: '");
+			print_error(name);
+			print_error("': not a valid identifier\n");
+			shell->exit_status = 1;
+			return (i);
 		}
+		i += 1;
+		found = find_and_replace_env(tmp, name, instru);
 		if (!found)
 			add_envar(name, get_envar_value(instru->next->unquoted), envar);
 		instru = instru->next;
 	}
+	shell->exit_status = 0;
 	return (i);
 }
 
-int	builtinenv(t_envar *head)
+int	builtinenv(t_envar *head, t_shell *shell)
 {
 	print_env(head);
+	shell->exit_status = 0;
 	return (1);
 }
 
-int	builtinunset(t_instru *instru, t_envar *head)
+int	builtinunset(t_instru *instru, t_envar *head, t_shell *shell)
 {
 	int		i;
 	char	*name;
@@ -105,7 +101,7 @@ int	builtinunset(t_instru *instru, t_envar *head)
 	i = 1;
 	if (!instru->next || instru->next->type != TEXT)
 	{
-		print_error("unset: not enough arguments\n");
+		print_error("minishell: unset: not enough arguments\n");
 		return (i);
 	}
 	while (instru->next && instru->next->type == TEXT)
@@ -116,5 +112,6 @@ int	builtinunset(t_instru *instru, t_envar *head)
 		instru = instru->next;
 		i++;
 	}
+	shell->exit_status = 0;
 	return (i);
 }

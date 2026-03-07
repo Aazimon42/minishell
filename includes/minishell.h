@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:01 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/03 18:34:45 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/07 09:52:21 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,13 @@ typedef struct s_envar
 	char			*value;
 }				t_envar;
 
+typedef struct s_shell
+{
+	t_instru	*instru;
+	t_envar		*envhead;
+	int			exit_status;
+}				t_shell;
+
 typedef enum e_redir
 {
 	R_NONE = 0,
@@ -60,17 +67,19 @@ typedef enum e_redir
 	R_HEREDOC = 4
 }	t_redir;
 
+extern int	g_exit_status;
+
 t_instru	*init_instruction(t_instru *before,
 				char *value, int size, int type);
 t_instru	*slicer(char *str);
 void		free_instru(t_instru *instru);
 void		free2d(char **arr);
-int			builtincd(t_instru *instru);
-int			builtinecho(t_instru *instru);
-int			builtinpwd(void);
-int			builtinexport(t_instru *instru, t_envar *envhead);
+int			builtincd(t_instru *instru, t_shell *shell);
+int			builtinecho(t_instru *instru, t_shell *shell);
+int			builtinpwd(t_shell *shell);
+int			builtinexport(t_instru *instru, t_envar *envhead, t_shell *shell);
 void		transformtilde(t_instru *instru);
-void		execute(t_instru *instru, t_envar *envhead);
+void		execute(t_shell *shell);
 t_envar		*setup_envar(char **env);
 void		add_envar(char *name, char *value, t_envar *head);
 t_envar		*setup_envar(char **env);
@@ -79,31 +88,42 @@ char		*get_envar_name(char *str);
 char		*get_envar_value(char *str);
 void		print_env(t_envar *head);
 void		print_export(t_envar *head);
-int			builtinunset(t_instru *instru, t_envar *head);
-int			builtinenv(t_envar *head);
+int			builtinunset(t_instru *instru, t_envar *head, t_shell *shell);
+int			builtinenv(t_envar *head, t_shell *shell);
 void		print_error(char *str);
-void		builtinexit(t_instru *instru, t_envar *head);
+void		builtinexit(t_instru *instru, t_envar *head, t_shell *shell);
 char		*get_var(t_envar *head, char *name, int i);
-void		handle_envar(t_instru *head, t_envar *envar);
+void		handle_envar(t_shell *shell);
+char		*expand(char *str, t_envar *envar, t_shell *shell);
 char		*ft_unquote(char *s1, int size);
 char		*get_cmd(char *cmd, char **env);
 void		ft_strcpy(char *dest, char *src);
 void		ft_strcat(char *dest, char *src);
 char		**split_env(t_envar *envhead);
-int			handle_heredoc(t_instru *instru);
+int			handle_heredoc(t_shell *shell);
 int			handle_redirect(t_instru *instru);
 int			next_sep_is_redirect(t_instru *instru);
 char		*ft_join_instru(t_instru *instru);
 t_redir		get_redir_type(t_instru *node);
 void		restore_fds(int save_stdin, int save_stdout);
 t_instru	*skip_current_command(t_instru *node);
-int			collect_heredocs(t_instru *cmd);
+int			collect_heredocs(t_shell *shell);
 int			handle_append(t_instru *instru);
 int			handle_redirect_in(t_instru *instru);
+int			is_fullalnum(char *str);
 int			apply_redirections(t_instru *cmd, int heredoc_fd);
-void		executeve(t_instru *instru, t_envar *envhead);
-void		fork_and_exec(t_instru *instru, t_envar *envhead);
+void		executeve(t_shell *shell);
+void		fork_and_exec(t_shell *shell);
 int			count_pipes(t_instru *instru);
-void		execute_pipeline(t_instru *instru, t_envar *env);
+void		execute_pipeline(t_shell *shell);
+int			builtexec(t_shell *shell);
+void		formatenv(char *env, t_envar *envhead);
+void		replace_envar(t_envar *head, char *name, char *value);
+void		increment_double_int(int *i, int *j);
+int			find_and_replace_env(t_envar *tmp, char *name, t_instru *instru);
+void		free_envar(t_envar *head);
+void		handle_error(char **env, char **split_cmd, char *path);
+void		handle_sigint(int sig);
+void		handle_sigint_parent(int sig);
 
 #endif

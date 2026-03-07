@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 05:24:02 by malebrun          #+#    #+#             */
-/*   Updated: 2026/02/10 17:50:12 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/07 03:57:37 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*get_envar_name(char *str)
 	char	*name;
 
 	i = 0;
-	while (str[i] && str[i] != '=')
+	while (str[i] && str[i] != '=' && str[i] != '\n')
 		i++;
 	name = malloc(sizeof(char) * (i + 1));
 	if (!name)
@@ -95,7 +95,7 @@ t_envar	*setup_envar(char **env)
 	t_envar	*head;
 
 	i = 1;
-	if (!env)
+	if (!env || !*env)
 		return (0);
 	head = init_envar(get_envar_name(env[0]), get_envar_value(env[0]));
 	if (!head)

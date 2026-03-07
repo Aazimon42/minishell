@@ -6,7 +6,7 @@
 /*   By: malebrun <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 10:09:59 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/23 21:10:21 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/07 08:25:20 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,22 +70,30 @@ void	free_envar(t_envar *head)
 	}
 }
 
-void	builtinexit(t_instru *instru, t_envar *head)
+void	builtinexit(t_instru *instru, t_envar *head, t_shell *shell)
 {
 	int	errcode;
 
-	if (!instru->next || (instru->next && instru->next->type == PIPE))
-		errcode = 0;
-	else if (instru->next && instru->next->next && instru->next->type == TEXT
-		&& instru->next->next->type != PIPE)
-		errcode = -1;
+	print_error("exit\n");
+	if (!instru->next || instru->next->type == PIPE)
+		errcode = shell->exit_status;
+	else if (instru->next->next && instru->next->next->type != PIPE)
+	{
+		shell->exit_status = 1;
+		print_error("minishell : exit : too many arguments\n");
+		return ;
+	}
 	else if (is_numeric(instru->next->str))
 		errcode = ft_atoi(instru->next->str) % 256;
 	else
-		errcode = 255;
+	{
+		shell->exit_status = 2;
+		print_error("minishell: exit: ");
+		print_error(instru->next->str);
+		print_error(": numeric argument required\n");
+		errcode = 2;
+	}
 	free_instru(instru);
 	free_envar(head);
-	if (errcode == -1)
-		print_error("exit: too many arguments \n");
 	exit(errcode);
 }

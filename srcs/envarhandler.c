@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/04 08:03:35 by malebrun          #+#    #+#             */
-/*   Updated: 2026/02/23 19:52:10 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/07 08:04:24 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static char	*get_evname(char *str)
 	i = 0;
 	if (str[0] == '$')
 		str++;
-	while (str[i] && str[i] != ' ' && ft_isalnum(str[i]))
+	while (str[i] && str[i] != ' ' && (ft_isalnum(str[i]) || str[i] == '?'))
 		i++;
 	result = malloc(sizeof(char) * (i + 1));
 	if (!result)
@@ -40,83 +40,83 @@ static char	*get_evvalue(char *str, t_envar *envar)
 {
 	while (envar)
 	{
-		if (strcmp(str, envar->name) == 0)
+		if (ft_strcmp(str, envar->name) == 0)
 			return (envar->value);
 		envar = envar->next;
 	}
 	return (NULL);
 }
 
-static void	replaceenvar(t_instru *head, char *name, char *value, int pos)
+static void	replaceenvar(char **str, char *name, char *value, int pos)
 {
-	int		i;
-	int		j;
-	int		k;
+	int		i[3];
 	char	*result;
 
-	k = 0;
-	j = 0;
-	i = 0;
 	if (!name)
 		return ;
 	if (!value)
 		value = "";
-	result = malloc(ft_strlen(head->str) - ft_strlen(name) + ft_strlen(value) + 1);
+	result = malloc(ft_strlen(*str) - ft_strlen(name) + ft_strlen(value) + 1);
 	if (!result)
 		return ;
-	while (i < pos)
-		result[j++] = head->str[i++];
-	k = 0;
-	while (value[k])
-		result[j++] = value[k++];
-	i = pos + ft_strlen(name) + 1;
-	while (head->str[i])
-		result[j++] = head->str[i++];
-	result[j] = '\0';
-	free(head->str);
+	i[0] = 0;
+	i[1] = 0;
+	while (i[0] < pos)
+		result[i[1]++] = (*str)[i[0]++];
+	i[2] = 0;
+	while (value[i[2]])
+		result[i[1]++] = value[i[2]++];
+	i[0] = pos + ft_strlen(name) + 1;
+	while ((*str)[i[0]])
+		result[i[1]++] = (*str)[i[0]++];
+	result[i[1]] = '\0';
+	free(*str);
 	free(name);
-	head->str = result;
+	*str = result;
 }
 
-static void	expand(t_instru *head, t_envar *envar)
+char	*expand(char *str, t_envar *envar, t_shell *shell)
 {
 	int		i;
-	int		in_single;
-	int		in_double;
+	int		in_s;
+	int		in_d;
+	char	*res;
 	char	*temp;
 
 	i = 0;
-	in_single = 0;
-	in_double = 0;
-	while (head->str[i])
+	in_s = 0;
+	in_d = 0;
+	res = ft_strdup(str);
+	while (res[i])
 	{
-		if (head->str[i] == '\'' && !in_double)
-			in_single = !in_single;
-		else if (head->str[i] == '"' && !in_single)
-			in_double = !in_double;
-		else if (head->str[i] == '$' && head->str[i + 1]
-			&& head->str[i + 1] != ' ' && !in_single)
+		if (res[i] == '\'' && !in_d)
+			in_s = !in_s;
+		else if (res[i] == '"' && !in_s)
+			in_d = !in_d;
+		else if (res[i] == '$' && res[i + 1] && res[i + 1] != ' ' && !in_s)
 		{
-			temp = get_evname(&head->str[i]);
-			replaceenvar(head, temp, get_evvalue(temp, envar), i);
-			free(head->unquoted);
-			head->unquoted = ft_strdup(head->str);
-			if (in_double)
-			{
-				free(head->unquoted);
-				head->unquoted = ft_unquote(head->str, ft_strlen(head->str));
-			}
+			temp = get_evname(&res[i]);
+			if (res[i + 1] == '?')
+				replaceenvar(&res, temp, ft_itoa(shell->exit_status), i);
+			else
+				replaceenvar(&res, temp, get_evvalue(temp, envar), i);
 			i++;
 		}
 		i++;
 	}
+	return (res);
 }
 
-void	handle_envar(t_instru *head, t_envar *envar)
+void	handle_envar(t_shell *shell)
 {
+	t_instru	*head;
+
+	head = shell->instru;
 	while (head && head->type == TEXT)
 	{
-		expand(head, envar);
+		head->str = expand(head->str, shell->envhead, shell);
+		free(head->unquoted);
+		head->unquoted = ft_unquote(head->str, ft_strlen(head->str));
 		head = head->next;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 08:11:26 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/01 20:23:46 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/07 02:54:35 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,12 @@ int	ft_unquote_len(char *s1, int size)
 		{
 			quote = s1[i++];
 			while (s1[i] && s1[i] != quote)
-			{
-				len++;
-				i++;
-			}
+				increment_double_int(&i, &len);
 			if (s1[i] == quote)
 				i++;
 		}
 		else
-		{
-			i++;
-			len++;
-		}
+			increment_double_int(&i, &len);
 	}
 	return (len);
 }

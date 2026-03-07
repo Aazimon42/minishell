@@ -6,57 +6,56 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:43:03 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/03 18:25:05 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/07 10:39:14 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	executeve(t_instru *instru, t_envar *envhead)
+void	executeve(t_shell *shell)
 {
 	char	**split_cmd;
 	char	*cmd;
 	char	*path;
 	char	**env;
 
-	cmd = ft_join_instru(instru);
-	env = split_env(envhead);
+	cmd = ft_join_instru(shell->instru);
+	env = split_env(shell->envhead);
 	split_cmd = ft_split(cmd, ' ');
-	if (access(split_cmd[0], F_OK | X_OK) == 0)
+	if (access(split_cmd[0], F_OK) == 0)
 		path = split_cmd[0];
 	else
 		path = get_cmd(split_cmd[0], env);
 	free(cmd);
-	if (!path || execve(path, split_cmd, env) == -1)
-	{
-		if (path)
-			free(path);
-		free2d(env);
-		return ;
-	}
+	handle_error(env, split_cmd, path);
+	execve(path, split_cmd, env);
+	print_error("minishell: execve: format error\n");
+	free2d(env);
+	exit(126);
 }
 
-static int	builtexec(t_instru *instru, t_envar *envhead)
+int	builtexec(t_shell *shell)
 {
 	int		executed;
 
+	handle_envar(shell);
 	executed = 0;
-	if (!ft_strcmp(instru->str, "cd"))
-		executed += builtincd(instru);
-	else if (!ft_strcmp(instru->str, "echo"))
-		executed += builtinecho(instru);
-	else if (!ft_strcmp(instru->str, "pwd"))
-		executed += builtinpwd();
-	else if (!ft_strcmp(instru->str, "export"))
-		executed += builtinexport(instru, envhead);
-	else if (!ft_strcmp(instru->str, "unset"))
-		executed += builtinunset(instru, envhead);
-	else if (!ft_strcmp(instru->str, "env"))
-		executed += builtinenv(envhead);
-	else if (!ft_strcmp(instru->str, "exit"))
-		builtinexit(instru, envhead);
+	if (!ft_strcmp(shell->instru->str, "cd"))
+		executed += builtincd(shell->instru, shell);
+	else if (!ft_strcmp(shell->instru->str, "echo"))
+		executed += builtinecho(shell->instru, shell);
+	else if (!ft_strcmp(shell->instru->str, "pwd"))
+		executed += builtinpwd(shell);
+	else if (!ft_strcmp(shell->instru->str, "export"))
+		executed += builtinexport(shell->instru, shell->envhead, shell);
+	else if (!ft_strcmp(shell->instru->str, "unset"))
+		executed += builtinunset(shell->instru, shell->envhead, shell);
+	else if (!ft_strcmp(shell->instru->str, "env"))
+		executed += builtinenv(shell->envhead, shell);
+	else if (!ft_strcmp(shell->instru->str, "exit"))
+		builtinexit(shell->instru, shell->envhead, shell);
 	else
-		fork_and_exec(instru, envhead);
+		fork_and_exec(shell);
 	return (executed);
 }
 
@@ -72,7 +71,7 @@ int	apply_redirections(t_instru *cmd, int heredoc_fd)
 	if (heredoc_fd != -1)
 		close(heredoc_fd);
 	tmp = cmd;
-	while (tmp && (tmp->type != SEPARATOR || ft_strcmp(tmp->str, "|")))
+	while (tmp && tmp->type != PIPE)
 	{
 		separator = get_redir_type(tmp);
 		if (separator == R_OUT)
@@ -89,33 +88,38 @@ int	apply_redirections(t_instru *cmd, int heredoc_fd)
 	return (1);
 }
 
-int	execute_one_command(t_instru *cmd, t_envar *env)
+int	execute_one_command(t_shell *shell)
 {
 	int	save_stdin;
 	int	save_stdout;
 
 	save_stdin = dup(STDIN_FILENO);
 	save_stdout = dup(STDOUT_FILENO);
-	if (!apply_redirections(cmd, collect_heredocs(cmd)))
+	if (!apply_redirections(shell->instru, collect_heredocs(shell)))
 	{
 		restore_fds(save_stdin, save_stdout);
 		return (0);
 	}
-	builtexec(cmd, env);
+	builtexec(shell);
 	restore_fds(save_stdin, save_stdout);
 	return (1);
 }
 
-void	execute(t_instru *instru, t_envar *envhead)
+void	execute(t_shell *shell)
 {
-	if (count_pipes(instru) > 0)
+	if (shell->instru->type == PIPE)
 	{
-		execute_pipeline(instru, envhead);
+		print_error("minishell: syntax error near unexpected token `|'\n");
 		return ;
 	}
-	while (instru)
+	if (count_pipes(shell->instru) > 0)
 	{
-		execute_one_command(instru, envhead);
-		instru = skip_current_command(instru);
+		execute_pipeline(shell);
+		return ;
+	}
+	while (shell->instru)
+	{
+		execute_one_command(shell);
+		shell->instru = skip_current_command(shell->instru);
 	}
 }

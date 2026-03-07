@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 05:02:40 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/03 08:39:40 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/07 02:06:41 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ static int	get_end_instru(char *str)
 
 static int	gtype(char *str, int len)
 {
-	if (len == 2 && ((str[0] == '&' || str[0] == '<' || str[0] == '>' || str[0] == '|') && str[0] == str[1]))
+	if (len == 2 && ((str[0] == '&' || str[0] == '<'
+				|| str[0] == '>' || str[0] == '|') && str[0] == str[1]))
 		return (SEPARATOR);
 	if (len == 1 && ((str[0] == '<') || str[0] == '>'))
 		return (SEPARATOR);
