@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils3.c                                           :+:      :+:    :+:   */
+/*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: edi-maio <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 02:15:33 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/10 14:01:15 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/10 22:58:50 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,11 @@ int	find_and_replace_env(t_envar *tmp, char *name, t_instru *instru)
 	int	found;
 
 	found = 0;
-	while (tmp)
+	while (tmp && !found)
 	{
-		if (!ft_strcmp(tmp->name, name)
-			&& instru->next->str[ft_strlen(name)] == '=')
+		if (name && tmp->name && !ft_strcmp(tmp->name, name)
+			&& (instru->next->str[ft_strlen(name)] == '='
+				|| instru->next->str[ft_strlen(name)] == '\0'))
 		{
 			replace_envar(tmp, name,
 				get_envar_value(instru->next->unquoted));

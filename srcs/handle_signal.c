@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 14:00:47 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/10 14:13:03 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/10 21:49:08 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,4 +27,11 @@ void	handle_sigint_parent(int sig)
 	(void)sig;
 	write(1, "\n", 1);
 	g_exit_status = 130;
+}
+
+void	handle_sigint_heredoc(int sig)
+{
+	(void)sig;
+	write(1, "\n", 1);
+	close(STDIN_FILENO);
 }

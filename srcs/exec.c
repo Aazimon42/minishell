@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:43:03 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/10 18:07:17 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/10 22:39:37 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	builtexec(t_shell *shell)
 	else if (!ft_strcmp(shell->instru->str, "pwd"))
 		executed += builtinpwd(shell);
 	else if (!ft_strcmp(shell->instru->str, "export"))
-		executed += builtinexport(shell->instru, shell->envhead, shell);
+		executed += builtinexport(shell->instru, shell->envhead, shell, 0);
 	else if (!ft_strcmp(shell->instru->str, "unset"))
 		executed += builtinunset(shell->instru, shell->envhead, shell);
 	else if (!ft_strcmp(shell->instru->str, "env"))

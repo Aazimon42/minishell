@@ -6,55 +6,53 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 21:37:30 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/10 21:46:14 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/10 21:51:42 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int	check_delimiter(char *line, char *delimiter)
+static void	write_line(int fd, char *line, t_shell *shell, int exp)
 {
-	if (ft_strcmp(line, delimiter) == 0)
-	{
-		free(line);
-		return (1);
-	}
-	return (0);
-}
-
-void	read_heredoc(int fd[2], char *delimiter, t_shell *shell, int exp)
-{
-	char	*line;
 	char	*result;
 
+	result = line;
+	if (exp)
+		result = expand(line, shell, 0, 0);
+	write(fd, result, ft_strlen(result));
+	write(fd, "\n", 1);
+	if (result != line)
+		free(result);
+}
+
+static int	read_heredoc_lines(int fd[2], char *delim, t_shell *shell, int exp)
+{
+	char	*line;
+
+	signal(SIGINT, handle_sigint_heredoc);
 	while (1)
 	{
 		line = readline("> ");
 		if (!line)
 		{
 			close(fd[1]);
-			exit(130);
+			shell->exit_status = 130;
+			signal(SIGINT, handle_sigint);
+			return (-2);
 		}
-		if (check_delimiter(line, delimiter))
+		if (check_delimiter(line, delim))
 			break ;
-		result = line;
-		if (exp)
-			result = expand(line, shell, 0, 0);
-		write(fd[1], result, ft_strlen(result));
-		write(fd[1], "\n", 1);
+		write_line(fd[1], line, shell, exp);
 		free(line);
-		if (result != line)
-			free(result);
 	}
 	close(fd[1]);
-	exit(0);
+	signal(SIGINT, handle_sigint);
+	return (0);
 }
 
 static int	read_heredoc_to_fd(t_instru *instru, t_shell *shell, int exp)
 {
 	int		fd[2];
-	int		status;
-	pid_t	pid;
 	char	*clean_delim;
 
 	exp = quotes_closed(instru->str) && !has_quotes(instru->str);
@@ -63,15 +61,11 @@ static int	read_heredoc_to_fd(t_instru *instru, t_shell *shell, int exp)
 		clean_delim = "\x01";
 	if (pipe(fd) == -1)
 		return (-1);
-	signal(SIGINT, handle_sigint_parent);
-	pid = fork();
-	if (pid == 0)
-		exec_heredoc(shell, fd, clean_delim, exp);
-	close(fd[1]);
-	waitpid(pid, &status, 0);
-	signal(SIGINT, handle_sigint);
-	if (handle_result(shell, status, fd) == -2)
+	if (read_heredoc_lines(fd, clean_delim, shell, exp) == -2)
+	{
+		close(fd[0]);
 		return (-2);
+	}
 	return (fd[0]);
 }
 

@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:01 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/10 20:44:28 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/10 22:39:27 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void		free2d(char **arr);
 int			builtincd(t_instru *instru, t_shell *shell);
 int			builtinecho(t_instru *instru, t_shell *shell);
 int			builtinpwd(t_shell *shell);
-int			builtinexport(t_instru *instru, t_envar *envhead, t_shell *shell);
+int			builtinexport(t_instru *instru, t_envar *envhead, t_shell *shell, int found);
 void		transformtilde(t_instru *instru);
 void		execute(t_shell *shell);
 t_envar		*setup_envar(char **env);
@@ -127,6 +127,7 @@ void		free_envar(t_envar *head);
 void		handle_error(char **env, char **split_cmd, char *path);
 void		handle_sigint(int sig);
 void		handle_sigint_parent(int sig);
+void		handle_sigint_heredoc(int sig);
 int			handle_error_builtinexport(char *str, t_shell *shell);
 void		handle_sigquit(int sig);
 int			quotes_closed(char *str);
@@ -135,5 +136,6 @@ void		read_heredoc(int fd[2], char *delimiter,
 				t_shell *shell, int exp);
 void		exec_heredoc(t_shell *shell, int fd[2], char *delim, int exp);
 int			handle_result(t_shell *shell, int status, int fd[2]);
+int			check_delimiter(char *line, char *delimiter);
 
 #endif

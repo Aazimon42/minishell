@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 06:18:34 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/10 18:35:49 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/10 22:54:19 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,10 @@ t_envar	*delete_envar(t_envar *head, char *name)
 	return (head);
 }
 
-int	builtinexport(t_instru *instru, t_envar *envar, t_shell *shell)
+int	builtinexport(t_instru *instru, t_envar *envar, t_shell *shell, int found)
 {
 	int		i;
 	char	*name;
-	int		found;
 	t_envar	*tmp;
 
 	i = 1;
@@ -65,7 +64,7 @@ int	builtinexport(t_instru *instru, t_envar *envar, t_shell *shell)
 		print_export(envar);
 		return (i);
 	}
-	while (instru->next && instru->next->type == TEXT)
+	while (instru->next && instru->next->type == TEXT && !found)
 	{
 		tmp = envar;
 		name = get_envar_name(instru->next->unquoted);

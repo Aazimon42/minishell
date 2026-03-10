@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 05:24:02 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/07 03:57:37 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/10 22:14:32 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ char	*get_envar_value(char *str)
 	i = 0;
 	while (str[i] && str[i] != '=')
 		i++;
-	i++;
+	if (str[i] == '=')
+		i++;
 	value = malloc(sizeof(char) * (ft_strlen(&str[i]) + 1));
 	if (!value)
 		return (NULL);
