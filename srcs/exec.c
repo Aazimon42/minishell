@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:43:03 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/07 10:39:14 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/10 13:42:57 by malebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void	execute(t_shell *shell)
 	}
 	if (count_pipes(shell->instru) > 0)
 	{
-		execute_pipeline(shell);
+		execute_pipeline(shell, 0, STDIN_FILENO);
 		return ;
 	}
 	while (shell->instru)

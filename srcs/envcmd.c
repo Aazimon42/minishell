@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 06:18:34 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/07 08:31:02 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/10 13:26:50 by malebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,14 +68,8 @@ int	builtinexport(t_instru *instru, t_envar *envar, t_shell *shell)
 	{
 		tmp = envar;
 		name = get_envar_name(instru->next->unquoted);
-		if (!is_fullalnum(name))
-		{
-			print_error("minishell: export: '");
-			print_error(name);
-			print_error("': not a valid identifier\n");
-			shell->exit_status = 1;
+		if (!handle_error_builtinexport(name, shell))
 			return (i);
-		}
 		i += 1;
 		found = find_and_replace_env(tmp, name, instru);
 		if (!found)

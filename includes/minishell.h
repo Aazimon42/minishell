@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:01 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/07 09:52:21 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/10 13:40:53 by malebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void		print_error(char *str);
 void		builtinexit(t_instru *instru, t_envar *head, t_shell *shell);
 char		*get_var(t_envar *head, char *name, int i);
 void		handle_envar(t_shell *shell);
-char		*expand(char *str, t_envar *envar, t_shell *shell);
+char		*expand(char *str, t_shell *shell, int in_s, int in_d);
 char		*ft_unquote(char *s1, int size);
 char		*get_cmd(char *cmd, char **env);
 void		ft_strcpy(char *dest, char *src);
@@ -115,7 +115,7 @@ int			apply_redirections(t_instru *cmd, int heredoc_fd);
 void		executeve(t_shell *shell);
 void		fork_and_exec(t_shell *shell);
 int			count_pipes(t_instru *instru);
-void		execute_pipeline(t_shell *shell);
+void		execute_pipeline(t_shell *shell, int i, int fd_in);
 int			builtexec(t_shell *shell);
 void		formatenv(char *env, t_envar *envhead);
 void		replace_envar(t_envar *head, char *name, char *value);
@@ -125,5 +125,5 @@ void		free_envar(t_envar *head);
 void		handle_error(char **env, char **split_cmd, char *path);
 void		handle_sigint(int sig);
 void		handle_sigint_parent(int sig);
-
+int			handle_error_builtinexport(char *str, t_shell *shell);
 #endif

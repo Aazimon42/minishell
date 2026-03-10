@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 18:02:40 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/07 09:52:40 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/10 13:43:04 by malebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,17 +66,13 @@ static int	run_pipe_segment(t_shell *shell, int fd_in, int *fd_out)
 	return (pipefd[0]);
 }
 
-void	execute_pipeline(t_shell *shell)
+void	execute_pipeline(t_shell *shell, int i, int fd_in)
 {
 	int			n;
-	int			i;
-	int			fd_in;
 	int			fd_out;
 	int			status;
 
 	n = count_pipes(shell->instru);
-	fd_in = STDIN_FILENO;
-	i = 0;
 	while (i <= n)
 	{
 		fd_out = STDOUT_FILENO;

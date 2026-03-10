@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/04 08:03:35 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/07 08:04:24 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/10 12:35:04 by malebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,17 +75,13 @@ static void	replaceenvar(char **str, char *name, char *value, int pos)
 	*str = result;
 }
 
-char	*expand(char *str, t_envar *envar, t_shell *shell)
+char	*expand(char *str, t_shell *shell, int in_s, int in_d)
 {
 	int		i;
-	int		in_s;
-	int		in_d;
 	char	*res;
 	char	*temp;
 
 	i = 0;
-	in_s = 0;
-	in_d = 0;
 	res = ft_strdup(str);
 	while (res[i])
 	{
@@ -99,7 +95,7 @@ char	*expand(char *str, t_envar *envar, t_shell *shell)
 			if (res[i + 1] == '?')
 				replaceenvar(&res, temp, ft_itoa(shell->exit_status), i);
 			else
-				replaceenvar(&res, temp, get_evvalue(temp, envar), i);
+				replaceenvar(&res, temp, get_evvalue(temp, shell->envhead), i);
 			i++;
 		}
 		i++;
@@ -114,7 +110,7 @@ void	handle_envar(t_shell *shell)
 	head = shell->instru;
 	while (head && head->type == TEXT)
 	{
-		head->str = expand(head->str, shell->envhead, shell);
+		head->str = expand(head->str, shell, 0, 0);
 		free(head->unquoted);
 		head->unquoted = ft_unquote(head->str, ft_strlen(head->str));
 		head = head->next;

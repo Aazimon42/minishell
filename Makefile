@@ -6,7 +6,7 @@
 #    By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/27 17:10:17 by edi-maio          #+#    #+#              #
-#    Updated: 2026/03/07 02:20:53 by edi-maio         ###   ########.fr        #
+#    Updated: 2026/03/10 13:27:29 by malebrun         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,8 @@ C_FILES = main.c \
 		  redirection.c \
 		  exec_utils.c \
 		  pipe.c \
-		  utils3.c
+		  utils3.c \
+		  utils4.c
 
 SRCS = $(addprefix srcs/,$(C_FILES))
 
