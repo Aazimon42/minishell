@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:43:03 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/10 17:21:46 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/10 18:07:17 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ int	execute_one_command(t_shell *shell)
 
 void	execute(t_shell *shell)
 {
-	if (shell->instru->type == PIPE)
+	if (shell->instru && shell->instru->type == PIPE)
 	{
 		print_error("minishell: syntax error near unexpected token `|'\n");
 		return ;

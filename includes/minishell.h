@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:01 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/10 15:25:12 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/10 20:44:28 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,4 +129,11 @@ void		handle_sigint(int sig);
 void		handle_sigint_parent(int sig);
 int			handle_error_builtinexport(char *str, t_shell *shell);
 void		handle_sigquit(int sig);
+int			quotes_closed(char *str);
+int			has_quotes(char *str);
+void		read_heredoc(int fd[2], char *delimiter,
+				t_shell *shell, int exp);
+void		exec_heredoc(t_shell *shell, int fd[2], char *delim, int exp);
+int			handle_result(t_shell *shell, int status, int fd[2]);
+
 #endif

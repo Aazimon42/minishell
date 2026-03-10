@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 09:32:53 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/02/03 09:33:43 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/10 19:54:45 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,46 @@ void	print_env(t_envar *head)
 			printf("%s=%s\n", head->name, head->value);
 		head = head->next;
 	}
+}
+
+static int	env_size(t_envar *envhead)
+{
+	int	count;
+
+	count = 0;
+	while (envhead)
+	{
+		count++;
+		envhead = envhead->next;
+	}
+	return (count);
+}
+
+char	**split_env(t_envar *envhead)
+{
+	char	**env;
+	int		count;
+	int		i;
+
+	count = env_size(envhead);
+	env = malloc(sizeof(char *) * (count + 1));
+	if (!env)
+		return (0);
+	i = 0;
+	while (i < count)
+	{
+		env[i] = malloc(sizeof(char) * (ft_strlen(envhead->name)
+					+ ft_strlen(envhead->value) + 2));
+		if (!env[i])
+		{
+			env[i] = NULL;
+			free2d(env);
+			return (0);
+		}
+		formatenv(env[i], envhead);
+		envhead = envhead->next;
+		i++;
+	}
+	env[i] = NULL;
+	return (env);
 }

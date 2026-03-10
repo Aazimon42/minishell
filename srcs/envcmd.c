@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 06:18:34 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/10 13:26:50 by malebrun         ###   ########.fr       */
+/*   Updated: 2026/03/10 18:35:49 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	replace_envar(t_envar *head, char *name, char *value)
 		}
 		head = head->next;
 	}
+	free(name);
 }
 
 t_envar	*delete_envar(t_envar *head, char *name)

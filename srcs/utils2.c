@@ -1,110 +1,71 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils2.c                                           :+:      :+:    :+:   */
+/*   utils3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
+/*   By: edi-maio <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/15 20:56:07 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/07 02:19:36 by edi-maio         ###   ########.fr       */
+/*   Created: 2026/03/07 02:15:33 by edi-maio          #+#    #+#             */
+/*   Updated: 2026/03/10 14:01:15 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	ft_strcpy(char *dest, char *src)
+void	formatenv(char *env, t_envar *envhead)
 {
-	int	i;
-
-	i = 0;
-	while (src[i])
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
+	ft_strcpy(env, envhead->name);
+	ft_strcat(env, "=");
+	ft_strcat(env, envhead->value);
 }
 
-void	ft_strcat(char *dest, char *src)
+int	find_and_replace_env(t_envar *tmp, char *name, t_instru *instru)
 {
-	int	i;
-	int	j;
+	int	found;
 
-	i = 0;
-	j = 0;
-	while (dest[i])
-		i++;
-	while (src[j])
+	found = 0;
+	while (tmp)
 	{
-		dest[i + j] = src[j];
-		j++;
-	}
-	dest[i + j] = '\0';
-}
-
-static int	env_size(t_envar *envhead)
-{
-	int	count;
-
-	count = 0;
-	while (envhead)
-	{
-		count++;
-		envhead = envhead->next;
-	}
-	return (count);
-}
-
-char	**split_env(t_envar *envhead)
-{
-	char	**env;
-	int		count;
-	int		i;
-
-	count = env_size(envhead);
-	env = malloc(sizeof(char *) * (count + 1));
-	if (!env)
-		return (0);
-	i = 0;
-	while (i < count)
-	{
-		env[i] = malloc(sizeof(char) * (ft_strlen(envhead->name)
-					+ ft_strlen(envhead->value) + 2));
-		if (!env[i])
+		if (!ft_strcmp(tmp->name, name)
+			&& instru->next->str[ft_strlen(name)] == '=')
 		{
-			env[i] = NULL;
-			free2d(env);
-			return (0);
+			replace_envar(tmp, name,
+				get_envar_value(instru->next->unquoted));
+			found = 1;
 		}
-		formatenv(env[i], envhead);
-		envhead = envhead->next;
-		i++;
+		tmp = tmp->next;
 	}
-	env[i] = NULL;
-	return (env);
+	return (found);
 }
 
-char	*ft_join_instru(t_instru *instru)
+void	increment_double_int(int *i, int *j)
 {
-	char	*tmp;
-	char	*cmd;
+	(*i)++;
+	(*j)++;
+}
 
-	cmd = ft_strdup(instru->str);
-	if (!cmd)
+int	is_fullalnum(char *str)
+{
+	if (*str && !ft_isalpha(str[0]) && str[0] != '_')
 		return (0);
-	while (instru->next && instru->next->type == TEXT)
+	while (*str)
 	{
-		tmp = cmd;
-		cmd = ft_strjoin(cmd, " ");
-		free(tmp);
-		if (!cmd)
+		if (!ft_isalnum(str[0]) && str[0] != '_')
 			return (0);
-		tmp = cmd;
-		cmd = ft_strjoin(cmd, instru->next->str);
-		free(tmp);
-		if (!cmd)
-			return (0);
-		instru = instru->next;
+		str++;
 	}
-	return (cmd);
+	return (1);
+}
+
+int	handle_error_builtinexport(char *str, t_shell *shell)
+{
+	if (!is_fullalnum(str))
+	{
+		print_error("minishell: export : '");
+		print_error(str);
+		print_error("': not a valide identifier\n");
+		shell->exit_status = 1;
+		return (0);
+	}
+	return (1);
 }
