@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 08:11:26 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/07 02:54:35 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/10 17:58:38 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ char	*ft_unquote(char *s1, int size)
 	char	*s2;
 
 	s2 = malloc(sizeof(char) * (ft_unquote_len(s1, size) + 1));
+	if (!s2)
+		return (0);
 	i = 0;
 	j = 0;
 	while (s1[i] && i < size)

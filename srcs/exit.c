@@ -6,7 +6,7 @@
 /*   By: malebrun <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 10:09:59 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/07 08:25:20 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/10 15:26:05 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,5 +95,6 @@ void	builtinexit(t_instru *instru, t_envar *head, t_shell *shell)
 	}
 	free_instru(instru);
 	free_envar(head);
+	restore_fds(shell->save_stdin, shell->save_stdout);
 	exit(errcode);
 }

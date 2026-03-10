@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:43:03 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/10 13:42:57 by malebrun         ###   ########.fr       */
+/*   Updated: 2026/03/10 17:21:46 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,18 +90,30 @@ int	apply_redirections(t_instru *cmd, int heredoc_fd)
 
 int	execute_one_command(t_shell *shell)
 {
-	int	save_stdin;
-	int	save_stdout;
+	t_instru	*head;
 
-	save_stdin = dup(STDIN_FILENO);
-	save_stdout = dup(STDOUT_FILENO);
+	head = shell->instru;
+	shell->save_stdin = dup(STDIN_FILENO);
+	shell->save_stdout = dup(STDOUT_FILENO);
 	if (!apply_redirections(shell->instru, collect_heredocs(shell)))
 	{
-		restore_fds(save_stdin, save_stdout);
+		restore_fds(shell->save_stdin, shell->save_stdout);
 		return (0);
 	}
+	while (shell->instru && shell->instru->type == SEPARATOR)
+	{
+		shell->instru = shell->instru->next;
+		if (shell->instru)
+			shell->instru = shell->instru->next;
+	}
+	if (!shell->instru)
+	{
+		restore_fds(shell->save_stdin, shell->save_stdout);
+		return (1);
+	}
 	builtexec(shell);
-	restore_fds(save_stdin, save_stdout);
+	restore_fds(shell->save_stdin, shell->save_stdout);
+	shell->instru = head;
 	return (1);
 }
 

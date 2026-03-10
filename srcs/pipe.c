@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 18:02:40 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/10 13:43:04 by malebrun         ###   ########.fr       */
+/*   Updated: 2026/03/10 15:27:54 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ static void	exec_child(t_shell *shell, int fd_in, int fd_out)
 		close(fd_out);
 	}
 	builtexec(shell);
+	free_instru(shell->instru);
+	free_envar(shell->envhead);
 	exit(shell->exit_status);
 }
 
@@ -58,7 +60,11 @@ static int	run_pipe_segment(t_shell *shell, int fd_in, int *fd_out)
 		pipefd[0] = -1;
 	pid = fork();
 	if (pid == 0)
+	{
+		if (pipefd[0] != -1)
+			close(pipefd[0]);
 		exec_child(shell, fd_in, *fd_out);
+	}
 	if (fd_in != STDIN_FILENO)
 		close(fd_in);
 	if (*fd_out != STDOUT_FILENO)
@@ -104,11 +110,15 @@ void	fork_and_exec(t_shell *shell)
 	if (pid1 == 0)
 	{
 		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		executeve(shell);
 		exit(shell->exit_status);
 	}
 	waitpid(pid1, &status, 0);
 	signal(SIGINT, handle_sigint);
+	if (((status & 0x7f) != 0) && ((status & 0x7f) != 0x7f)
+		&& ((status & 0x7f) == SIGQUIT))
+		write(1, "Quit (core dumped)\n", 19);
 	if ((status & 0x7f) == 0)
 		shell->exit_status = (status >> 8) & 0xff;
 	else if (((status & 0x7f) != 0) && ((status & 0x7f) != 0x7f))

@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:01 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/10 13:40:53 by malebrun         ###   ########.fr       */
+/*   Updated: 2026/03/10 15:25:12 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ typedef struct s_shell
 	t_instru	*instru;
 	t_envar		*envhead;
 	int			exit_status;
+	int			save_stdin;
+	int			save_stdout;
 }				t_shell;
 
 typedef enum e_redir
@@ -126,4 +128,5 @@ void		handle_error(char **env, char **split_cmd, char *path);
 void		handle_sigint(int sig);
 void		handle_sigint_parent(int sig);
 int			handle_error_builtinexport(char *str, t_shell *shell);
+void		handle_sigquit(int sig);
 #endif

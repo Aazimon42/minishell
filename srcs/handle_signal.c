@@ -1,26 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils4.c                                           :+:      :+:    :+:   */
+/*   handle_signal.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/10 13:21:12 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/10 13:27:55 by malebrun         ###   ########.fr       */
+/*   Created: 2026/03/10 14:00:47 by edi-maio          #+#    #+#             */
+/*   Updated: 2026/03/10 14:13:03 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	handle_error_builtinexport(char *str, t_shell *shell)
+void	handle_sigint(int sig)
 {
-	if (!is_fullalnum(str))
-	{
-		print_error("minishell: export : '");
-		print_error(str);
-		print_error("': not a valide identifier\n");
-		shell->exit_status = 1;
-		return (0);
-	}
-	return (1);
+	(void)sig;
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+	g_exit_status = 130;
+}
+
+void	handle_sigint_parent(int sig)
+{
+	(void)sig;
+	write(1, "\n", 1);
+	g_exit_status = 130;
 }

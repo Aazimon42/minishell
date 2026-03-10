@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 18:18:05 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/07 10:35:19 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/10 15:20:03 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,23 @@ void	restore_fds(int save_stdin, int save_stdout)
 
 t_instru	*skip_current_command(t_instru *node)
 {
+	t_instru	*temp;
+
 	while (node)
 	{
 		if (node->type == PIPE)
 		{
-			if (node->next)
-				return (node->next);
-			return (NULL);
+			temp = node->next;
+			free(node->str);
+			free(node->unquoted);
+			free(node);
+			return (temp);
 		}
-		node = node->next;
+		temp = node->next;
+		free(node->str);
+		free(node->unquoted);
+		free(node);
+		node = temp;
 	}
 	return (NULL);
 }
@@ -76,14 +84,4 @@ void	handle_error(char **env, char **split_cmd, char *path)
 		free2d(env);
 		exit(126);
 	}
-}
-
-void	handle_sigint(int sig)
-{
-	(void)sig;
-	write(1, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-	g_exit_status = 130;
 }

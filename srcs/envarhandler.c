@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/04 08:03:35 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/10 12:35:04 by malebrun         ###   ########.fr       */
+/*   Updated: 2026/03/10 15:16:53 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ char	*expand(char *str, t_shell *shell, int in_s, int in_d)
 
 	i = 0;
 	res = ft_strdup(str);
-	while (res[i])
+	while ((size_t)i < ft_strlen(res) && res[i])
 	{
 		if (res[i] == '\'' && !in_d)
 			in_s = !in_s;
@@ -106,11 +106,14 @@ char	*expand(char *str, t_shell *shell, int in_s, int in_d)
 void	handle_envar(t_shell *shell)
 {
 	t_instru	*head;
+	char		*tmp;
 
 	head = shell->instru;
 	while (head && head->type == TEXT)
 	{
+		tmp = head->str;
 		head->str = expand(head->str, shell, 0, 0);
+		free(tmp);
 		free(head->unquoted);
 		head->unquoted = ft_unquote(head->str, ft_strlen(head->str));
 		head = head->next;

@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 05:02:40 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/07 02:06:41 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/10 17:52:46 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	get_end_instru(char *str)
 		return (2);
 	if (str[0] == '<' || str[0] == '>' || str[0] == '|')
 		return (1);
-	while (str[i])
+	while ((size_t)i < ft_strlen(str) && str[i])
 	{
 		if (str[i] == '\'' || str[i] == '"')
 		{
@@ -78,7 +78,7 @@ t_instru	*slicer(char *str)
 	head = init_instruction(NULL, str + i, len, gtype(str + i, len));
 	instru = head;
 	i += len;
-	while (str[i])
+	while ((size_t)i < ft_strlen(str) && str[i])
 	{
 		while (str[i] == ' ')
 			i++;

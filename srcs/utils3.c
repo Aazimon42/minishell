@@ -6,7 +6,7 @@
 /*   By: edi-maio <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 02:15:33 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/07 10:35:34 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/10 14:01:15 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,15 @@ int	is_fullalnum(char *str)
 	return (1);
 }
 
-void	handle_sigint_parent(int sig)
+int	handle_error_builtinexport(char *str, t_shell *shell)
 {
-	(void)sig;
-	write(1, "\n", 1);
-	g_exit_status = 130;
+	if (!is_fullalnum(str))
+	{
+		print_error("minishell: export : '");
+		print_error(str);
+		print_error("': not a valide identifier\n");
+		shell->exit_status = 1;
+		return (0);
+	}
+	return (1);
 }
