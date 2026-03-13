@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:47 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/10 14:25:35 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/13 01:52:43 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,7 @@ int	main(int ac, char **av, char **env)
 	shell.envhead = setup_envar(env);
 	shell.instru = NULL;
 	shell.exit_status = 0;
+	shell.save_stdin = -1;
+	shell.save_stdout = -1;
 	minishell_logic(&shell, str);
 }

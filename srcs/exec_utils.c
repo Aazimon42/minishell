@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 18:18:05 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/10 15:20:03 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/13 01:19:42 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,22 +66,59 @@ t_instru	*skip_current_command(t_instru *node)
 	return (NULL);
 }
 
-void	handle_error(char **env, char **split_cmd, char *path)
+void	handle_error(t_shell *shell, char **env, char **split_cmd, char *path)
 {
-	if (!path)
+	int	err;
+
+	if (!*split_cmd)
+		err = 0;
+	else if (!path)
 	{
-		print_error("minishell: ");
-		print_error(split_cmd[0]);
-		print_error(": command not found\n");
-		free2d(env);
-		exit(127);
+		print_err("minishell: ");
+		print_err(split_cmd[0]);
+		print_err(": command not found\n");
+		err = 127;
 	}
-	if (access(path, X_OK) != 0)
+	else if (access(path, X_OK) != 0)
 	{
-		print_error("minishell: ");
-		print_error(path);
-		print_error(": Permission denied\n");
-		free2d(env);
-		exit(126);
+		print_err("minishell: ");
+		print_err(path);
+		print_err(": Permission denied\n");
+		err = 126;
 	}
+	else
+		return ;
+	free2d(split_cmd);
+	free2d(env);
+	restore_fds(shell->save_stdin, shell->save_stdout);
+	exit(err);
+}
+
+int	check_syntax(t_instru *instru)
+{
+	t_instru	*tmp;
+
+	tmp = instru;
+	if (tmp && tmp->type == PIPE)
+	{
+		print_err("minishell: syntax error near unexpected token `|'\n");
+		return (0);
+	}
+	while (tmp->next)
+	{
+		if (tmp->type == SEPARATOR && tmp->next && tmp->next->type == SEPARATOR)
+		{
+			print_err("minishell: syntax error near unexpected token `");
+			print_err(tmp->next->str);
+			print_err("'\n");
+			return (0);
+		}
+		tmp = tmp->next;
+	}
+	if (tmp && tmp->type != TEXT)
+	{
+		print_err("minishell: syntax error near unexpected token `newline'\n");
+		return (0);
+	}
+	return (1);
 }

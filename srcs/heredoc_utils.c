@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 19:57:57 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/10 21:51:53 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/13 01:36:07 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,21 @@ int	has_quotes(char *str)
 			return (1);
 		str++;
 	}
+	return (0);
+}
+
+int	handle_heredoc_end(int fd[2], t_shell *shell, char *delimiter)
+{
+	close(fd[1]);
+	if (g_exit_status == 130)
+	{
+		shell->exit_status = 130;
+		signal(SIGINT, handle_sigint);
+		return (-2);
+	}
+	print_err("minishell: warning: here-document"
+		" at line 1 delimited by end-of-file (wanted `");
+	print_err(delimiter);
+	print_err("')\n");
 	return (0);
 }

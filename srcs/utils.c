@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 22:45:17 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/10 19:56:30 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/13 00:53:40 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,12 @@ char	*get_var(t_envar *head, char *name, int i)
 	return (0);
 }
 
-void	print_error(char *str)
+void	print_err(char *str)
 {
 	int	len;
 
+	if (!str)
+		return ;
 	len = ft_strlen(str);
 	write(2, str, len);
 }

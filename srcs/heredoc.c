@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 21:37:30 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/10 21:51:42 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/13 01:34:40 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ static void	write_line(int fd, char *line, t_shell *shell, int exp)
 	char	*result;
 
 	result = line;
+	if (!line)
+		return ;
 	if (exp)
 		result = expand(line, shell, 0, 0);
 	write(fd, result, ft_strlen(result));
@@ -35,10 +37,9 @@ static int	read_heredoc_lines(int fd[2], char *delim, t_shell *shell, int exp)
 		line = readline("> ");
 		if (!line)
 		{
-			close(fd[1]);
-			shell->exit_status = 130;
-			signal(SIGINT, handle_sigint);
-			return (-2);
+			if (handle_heredoc_end(fd, shell, delim) == -2)
+				return (-2);
+			return (0);
 		}
 		if (check_delimiter(line, delim))
 			break ;

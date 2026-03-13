@@ -6,7 +6,7 @@
 /*   By: malebrun <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 10:09:59 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/10 15:26:05 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/13 01:53:50 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,9 @@ static int	is_numeric(const char *s)
 	{
 		if (s[i] < '0' || s[i] > '9')
 			return (0);
+		if (n > (9223372036854775807LL - (s[i] - '0')) / 10)
+			return (0);
 		n = n * 10 + (s[i++] - '0');
-		if (!neg && n > 2147483647)
-			return (0);
-		if (neg && - n < -2147483648)
-			return (0);
 	}
 	return (1);
 }
@@ -72,27 +70,27 @@ void	free_envar(t_envar *head)
 
 void	builtinexit(t_instru *instru, t_envar *head, t_shell *shell)
 {
-	int	errcode;
+	long long	errcode;
 
-	print_error("exit\n");
+	print_err("exit\n");
 	if (!instru->next || instru->next->type == PIPE)
 		errcode = shell->exit_status;
+	else if (instru->next && !is_numeric(instru->next->str))
+	{
+		shell->exit_status = 2;
+		print_err("minishell: exit: ");
+		print_err(instru->next->str);
+		print_err(": numeric argument required\n");
+		errcode = 2;
+	}
 	else if (instru->next->next && instru->next->next->type != PIPE)
 	{
 		shell->exit_status = 1;
-		print_error("minishell : exit : too many arguments\n");
+		print_err("minishell : exit : too many arguments\n");
 		return ;
 	}
-	else if (is_numeric(instru->next->str))
-		errcode = ft_atoi(instru->next->str) % 256;
 	else
-	{
-		shell->exit_status = 2;
-		print_error("minishell: exit: ");
-		print_error(instru->next->str);
-		print_error(": numeric argument required\n");
-		errcode = 2;
-	}
+		errcode = ft_atoi(instru->next->str) % 256;
 	free_instru(instru);
 	free_envar(head);
 	restore_fds(shell->save_stdin, shell->save_stdout);

@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 18:02:40 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/10 15:27:54 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/12 20:36:14 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int	count_pipes(t_instru *instru)
 
 static void	exec_child(t_shell *shell, int fd_in, int fd_out)
 {
-	apply_redirections(shell->instru, collect_heredocs(shell));
 	if (fd_in != STDIN_FILENO)
 	{
 		dup2(fd_in, STDIN_FILENO);
@@ -39,6 +38,7 @@ static void	exec_child(t_shell *shell, int fd_in, int fd_out)
 		dup2(fd_out, STDOUT_FILENO);
 		close(fd_out);
 	}
+	apply_redirections(shell->instru, collect_heredocs(shell));
 	builtexec(shell);
 	free_instru(shell->instru);
 	free_envar(shell->envhead);
@@ -61,23 +61,24 @@ static int	run_pipe_segment(t_shell *shell, int fd_in, int *fd_out)
 	pid = fork();
 	if (pid == 0)
 	{
-		if (pipefd[0] != -1)
+		if (*fd_out != STDOUT_FILENO)
 			close(pipefd[0]);
 		exec_child(shell, fd_in, *fd_out);
 	}
 	if (fd_in != STDIN_FILENO)
 		close(fd_in);
 	if (*fd_out != STDOUT_FILENO)
-		close(*fd_out);
+		close(pipefd[1]);
 	return (pipefd[0]);
 }
 
 void	execute_pipeline(t_shell *shell, int i, int fd_in)
 {
-	int			n;
-	int			fd_out;
-	int			status;
+	int	n;
+	int	fd_out;
+	int	status;
 
+	signal(SIGINT, handle_sigint_parent);
 	n = count_pipes(shell->instru);
 	while (i <= n)
 	{
@@ -97,6 +98,7 @@ void	execute_pipeline(t_shell *shell, int i, int fd_in)
 		else if (((status & 0x7f) != 0) && ((status & 0x7f) != 0x7f))
 			shell->exit_status = 128 + (status & 0x7f);
 	}
+	signal(SIGINT, handle_sigint);
 }
 
 void	fork_and_exec(t_shell *shell)

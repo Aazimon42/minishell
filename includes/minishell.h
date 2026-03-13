@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:01 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/10 22:39:27 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/13 01:38:47 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <readline/history.h>
 # include <stdlib.h>
 # include <sys/wait.h>
+# include <sys/ioctl.h>
 
 # define RED "\033[91m"
 # define ORANGE "\033[93m"
@@ -71,71 +72,92 @@ typedef enum e_redir
 
 extern int	g_exit_status;
 
+// ===== PARSING =====
 t_instru	*init_instruction(t_instru *before,
 				char *value, int size, int type);
 t_instru	*slicer(char *str);
-void		free_instru(t_instru *instru);
-void		free2d(char **arr);
+int			check_syntax(t_instru *instru);
+
+// ===== EXECUTION =====
+void		execute(t_shell *shell);
+int			builtexec(t_shell *shell);
+void		executeve(t_shell *shell);
+void		fork_and_exec(t_shell *shell);
+
+// ===== PIPELINE =====
+int			count_pipes(t_instru *instru);
+void		execute_pipeline(t_shell *shell, int i, int fd_in);
+int			apply_redirections(t_instru *cmd, int heredoc_fd);
+
+// ===== REDIRECTIONS =====
+int			handle_redirect(t_instru *instru);
+int			handle_redirect_in(t_instru *instru);
+int			handle_append(t_instru *instru);
+int			next_sep_is_redirect(t_instru *instru);
+t_redir		get_redir_type(t_instru *node);
+
+// ===== HEREDOC =====
+int			handle_heredoc(t_shell *shell);
+int			collect_heredocs(t_shell *shell);
+int			handle_heredoc_end(int fd[2], t_shell *shell, char *delimiter);
+int			check_delimiter(char *line, char *delimiter);
+int			quotes_closed(char *str);
+int			has_quotes(char *str);
+
+// ===== BUILTINS =====
 int			builtincd(t_instru *instru, t_shell *shell);
 int			builtinecho(t_instru *instru, t_shell *shell);
 int			builtinpwd(t_shell *shell);
-int			builtinexport(t_instru *instru, t_envar *envhead, t_shell *shell, int found);
-void		transformtilde(t_instru *instru);
-void		execute(t_shell *shell);
-t_envar		*setup_envar(char **env);
-void		add_envar(char *name, char *value, t_envar *head);
-t_envar		*setup_envar(char **env);
-int			ft_strcmp(const char *s1, const char *s2);
-char		*get_envar_name(char *str);
-char		*get_envar_value(char *str);
-void		print_env(t_envar *head);
-void		print_export(t_envar *head);
+int			builtinexport(t_instru *instru, t_envar *envhead,
+				t_shell *shell, int found);
 int			builtinunset(t_instru *instru, t_envar *head, t_shell *shell);
 int			builtinenv(t_envar *head, t_shell *shell);
-void		print_error(char *str);
 void		builtinexit(t_instru *instru, t_envar *head, t_shell *shell);
+
+// ===== ENVIRONMENT =====
+t_envar		*setup_envar(char **env);
+void		add_envar(char *name, char *value, t_envar *head);
+char		*get_envar_name(char *str);
+char		*get_envar_value(char *str);
+void		replace_envar(t_envar *head, char *name, char *value);
+int			find_and_replace_env(t_envar *tmp, char *name, t_instru *instru);
 char		*get_var(t_envar *head, char *name, int i);
+char		**split_env(t_envar *envhead);
+void		formatenv(char *env, t_envar *envhead);
 void		handle_envar(t_shell *shell);
 char		*expand(char *str, t_shell *shell, int in_s, int in_d);
-char		*ft_unquote(char *s1, int size);
 char		*get_cmd(char *cmd, char **env);
-void		ft_strcpy(char *dest, char *src);
-void		ft_strcat(char *dest, char *src);
-char		**split_env(t_envar *envhead);
-int			handle_heredoc(t_shell *shell);
-int			handle_redirect(t_instru *instru);
-int			next_sep_is_redirect(t_instru *instru);
-char		*ft_join_instru(t_instru *instru);
-t_redir		get_redir_type(t_instru *node);
-void		restore_fds(int save_stdin, int save_stdout);
-t_instru	*skip_current_command(t_instru *node);
-int			collect_heredocs(t_shell *shell);
-int			handle_append(t_instru *instru);
-int			handle_redirect_in(t_instru *instru);
-int			is_fullalnum(char *str);
-int			apply_redirections(t_instru *cmd, int heredoc_fd);
-void		executeve(t_shell *shell);
-void		fork_and_exec(t_shell *shell);
-int			count_pipes(t_instru *instru);
-void		execute_pipeline(t_shell *shell, int i, int fd_in);
-int			builtexec(t_shell *shell);
-void		formatenv(char *env, t_envar *envhead);
-void		replace_envar(t_envar *head, char *name, char *value);
-void		increment_double_int(int *i, int *j);
-int			find_and_replace_env(t_envar *tmp, char *name, t_instru *instru);
-void		free_envar(t_envar *head);
-void		handle_error(char **env, char **split_cmd, char *path);
+
+// ===== PRINT / ENV DISPLAY =====
+void		print_env(t_envar *head);
+void		print_export(t_envar *head);
+void		print_err(char *str);
+
+// ===== SIGNALS =====
 void		handle_sigint(int sig);
 void		handle_sigint_parent(int sig);
 void		handle_sigint_heredoc(int sig);
+
+// ===== MEMORY / FREE =====
+void		free_instru(t_instru *instru);
+void		free_envar(t_envar *head);
+void		free2d(char **arr);
+
+// ===== UTILS =====
+void		restore_fds(int save_stdin, int save_stdout);
+t_instru	*skip_current_command(t_instru *node);
+void		handle_error(t_shell *shell, char **env,
+				char **split_cmd, char *path);
 int			handle_error_builtinexport(char *str, t_shell *shell);
-void		handle_sigquit(int sig);
-int			quotes_closed(char *str);
-int			has_quotes(char *str);
-void		read_heredoc(int fd[2], char *delimiter,
-				t_shell *shell, int exp);
-void		exec_heredoc(t_shell *shell, int fd[2], char *delim, int exp);
-int			handle_result(t_shell *shell, int status, int fd[2]);
-int			check_delimiter(char *line, char *delimiter);
+void		transformtilde(t_instru *instru);
+char		*ft_join_instru(t_instru *instru);
+char		*ft_unquote(char *s1, int size);
+void		increment_double_int(int *i, int *j);
+int			is_fullalnum(char *str);
+
+// ===== STRING UTILS =====
+int			ft_strcmp(const char *s1, const char *s2);
+void		ft_strcpy(char *dest, char *src);
+void		ft_strcat(char *dest, char *src);
 
 #endif

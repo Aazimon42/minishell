@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:25:40 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/10 18:53:18 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/13 01:56:36 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,13 @@
 
 int	builtincd(t_instru *instru, t_shell *shell)
 {
+	char	buf[1024];
+
 	if (!instru->next || (instru->next->type != TEXT))
 	{
 		if (chdir(getenv("HOME")) == -1)
 			perror("cd :");
+		replace_envar(shell->envhead, ft_strdup("PWD"), getenv("HOME"));
 		shell->exit_status = 1;
 		return (1);
 	}
@@ -29,6 +32,8 @@ int	builtincd(t_instru *instru, t_shell *shell)
 		shell->exit_status = 1;
 		return (1);
 	}
+	replace_envar(shell->envhead, ft_strdup("PWD"),
+		ft_strdup(getcwd(buf, 1024)));
 	shell->exit_status = 0;
 	return (2);
 }
@@ -42,7 +47,7 @@ int	builtinecho(t_instru *instru, t_shell *shell)
 	i = 0;
 	if (!instru)
 		return (0);
-	if (instru->next && ft_strncmp(instru->next->str, "-n", 3) == 0)
+	if (instru->next && ft_strncmp(instru->next->str, "-n", 2) == 0)
 	{
 		newline = 0;
 		instru = instru->next;
@@ -52,7 +57,7 @@ int	builtinecho(t_instru *instru, t_shell *shell)
 	{
 		printf("%s", instru->next->unquoted);
 		instru = instru->next;
-		if (instru && instru->type == TEXT)
+		if (instru->next && instru->next->type == TEXT)
 			printf(" ");
 		i++;
 	}
@@ -76,5 +81,12 @@ int	builtinpwd(t_shell *shell)
 		perror("getcwd");
 		shell->exit_status = 1;
 	}
+	return (1);
+}
+
+int	builtinenv(t_envar *head, t_shell *shell)
+{
+	print_env(head);
+	shell->exit_status = 0;
 	return (1);
 }

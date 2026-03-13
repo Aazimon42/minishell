@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 05:02:40 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/10 17:52:46 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/12 21:16:32 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ static int	get_end_instru(char *str)
 	char	quote;
 
 	i = 0;
-	if ((str[0] == '&' && str[1] == '&') || (str[0] == '|' && str[1] == '|')
-		|| (str[0] == '<' && str[1] == '<') || (str[0] == '>' && str[1] == '>'))
+	if (!ft_strncmp(str, "&&", 2) || !ft_strncmp(str, "||", 2)
+		|| !ft_strncmp(str, "<<", 2) || !ft_strncmp(str, ">>", 2))
 		return (2);
 	if (str[0] == '<' || str[0] == '>' || str[0] == '|')
 		return (1);
@@ -74,10 +74,8 @@ t_instru	*slicer(char *str)
 	if (ft_strlen(str) == 0)
 		return (NULL);
 	i = 0;
-	len = get_end_instru(str + i);
-	head = init_instruction(NULL, str + i, len, gtype(str + i, len));
-	instru = head;
-	i += len;
+	instru = NULL;
+	head = NULL;
 	while ((size_t)i < ft_strlen(str) && str[i])
 	{
 		while (str[i] == ' ')
@@ -87,6 +85,8 @@ t_instru	*slicer(char *str)
 		len = get_end_instru(str + i);
 		temp = init_instruction(instru, str + i, len, gtype(str + i, len));
 		instru = temp;
+		if (!head)
+			head = instru;
 		i += len;
 	}
 	return (head);

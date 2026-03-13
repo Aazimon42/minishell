@@ -6,7 +6,7 @@
 /*   By: edi-maio <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 02:15:33 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/10 22:58:50 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/12 23:19:32 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	find_and_replace_env(t_envar *tmp, char *name, t_instru *instru)
 				|| instru->next->str[ft_strlen(name)] == '\0'))
 		{
 			replace_envar(tmp, name,
-				get_envar_value(instru->next->unquoted));
+				get_envar_value(instru->next->str));
 			found = 1;
 		}
 		tmp = tmp->next;
@@ -62,9 +62,9 @@ int	handle_error_builtinexport(char *str, t_shell *shell)
 {
 	if (!is_fullalnum(str))
 	{
-		print_error("minishell: export : '");
-		print_error(str);
-		print_error("': not a valide identifier\n");
+		print_err("minishell: export : '");
+		print_err(str);
+		print_err("': not a valide identifier\n");
 		shell->exit_status = 1;
 		return (0);
 	}

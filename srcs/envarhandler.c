@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/04 08:03:35 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/10 15:16:53 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/13 01:47:20 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,15 @@ static void	replaceenvar(char **str, char *name, char *value, int pos)
 	*str = result;
 }
 
+static void	replace_status(char **res, char *name, int status, int i)
+{
+	char	*itoa;
+
+	itoa = ft_itoa(status);
+	replaceenvar(res, name, itoa, i);
+	free(itoa);
+}
+
 char	*expand(char *str, t_shell *shell, int in_s, int in_d)
 {
 	int		i;
@@ -93,7 +102,7 @@ char	*expand(char *str, t_shell *shell, int in_s, int in_d)
 		{
 			temp = get_evname(&res[i]);
 			if (res[i + 1] == '?')
-				replaceenvar(&res, temp, ft_itoa(shell->exit_status), i);
+				replace_status(&res, temp, shell->exit_status, i);
 			else
 				replaceenvar(&res, temp, get_evvalue(temp, shell->envhead), i);
 			i++;
@@ -101,21 +110,4 @@ char	*expand(char *str, t_shell *shell, int in_s, int in_d)
 		i++;
 	}
 	return (res);
-}
-
-void	handle_envar(t_shell *shell)
-{
-	t_instru	*head;
-	char		*tmp;
-
-	head = shell->instru;
-	while (head && head->type == TEXT)
-	{
-		tmp = head->str;
-		head->str = expand(head->str, shell, 0, 0);
-		free(tmp);
-		free(head->unquoted);
-		head->unquoted = ft_unquote(head->str, ft_strlen(head->str));
-		head = head->next;
-	}
 }

@@ -6,7 +6,7 @@
 #    By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/27 17:10:17 by edi-maio          #+#    #+#              #
-#    Updated: 2026/03/10 20:05:12 by edi-maio         ###   ########.fr        #
+#    Updated: 2026/03/13 01:57:28 by edi-maio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,7 @@ OBJS = $(SRCS:.c=.o)
 .o: .c
 	cc $(CFLAGS) -I $(INCLUDES) -c $< -o $@
 
-all: $(NAME) clean
+all: $(NAME)
 
 $(LIBFT):
 	make -C libft all

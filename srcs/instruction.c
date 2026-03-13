@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 08:11:26 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/10 19:53:42 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/12 23:34:43 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,18 +104,25 @@ char	*ft_join_instru(t_instru *instru)
 	char	*tmp;
 	char	*cmd;
 
-	cmd = ft_strdup(instru->str);
+	cmd = ft_strdup(instru->unquoted);
 	if (!cmd)
 		return (0);
-	while (instru->next && instru->next->type == TEXT)
+	while (instru->next && instru->next->type != PIPE)
 	{
+		if (instru->next->type == SEPARATOR)
+		{
+			instru = instru->next;
+			if (instru->next)
+				instru = instru->next;
+			continue ;
+		}
 		tmp = cmd;
 		cmd = ft_strjoin(cmd, " ");
 		free(tmp);
 		if (!cmd)
 			return (0);
 		tmp = cmd;
-		cmd = ft_strjoin(cmd, instru->next->str);
+		cmd = ft_strjoin(cmd, instru->next->unquoted);
 		free(tmp);
 		if (!cmd)
 			return (0);
