@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 06:18:34 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/13 01:46:03 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/13 18:24:54 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	replace_envar(t_envar *head, char *name, char *value)
 {
+	if (!name || !value)
+		return ;
 	while (head)
 	{
 		if (!ft_strcmp(head->name, name))

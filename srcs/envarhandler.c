@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/04 08:03:35 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/13 01:47:20 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/13 18:34:33 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static char	*get_evname(char *str)
 	return (result);
 }
 
-static char	*get_evvalue(char *str, t_envar *envar)
+char	*get_evvalue(char *str, t_envar *envar)
 {
 	while (envar)
 	{

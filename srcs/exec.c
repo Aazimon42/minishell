@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:43:03 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/13 01:19:38 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/13 18:29:11 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	builtexec(t_shell *shell)
 	handle_envar(shell);
 	executed = 0;
 	if (!ft_strcmp(shell->instru->unquoted, "cd"))
-		executed += builtincd(shell->instru, shell);
+		executed += builtincd(shell->instru, shell->envhead, shell);
 	else if (!ft_strcmp(shell->instru->unquoted, "echo"))
 		executed += builtinecho(shell->instru, shell);
 	else if (!ft_strcmp(shell->instru->unquoted, "pwd"))

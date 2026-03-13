@@ -6,34 +6,37 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:25:40 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/13 01:56:36 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/13 18:42:25 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	builtincd(t_instru *instru, t_shell *shell)
+int	builtincd(t_instru *instru, t_envar *envhead, t_shell *shell)
 {
 	char	buf[1024];
 
+	getcwd(buf, 1024);
 	if (!instru->next || (instru->next->type != TEXT))
 	{
 		if (chdir(getenv("HOME")) == -1)
-			perror("cd :");
-		replace_envar(shell->envhead, ft_strdup("PWD"), getenv("HOME"));
+			perror("minishell: cd:");
+		replace_envar(envhead, ft_strdup("PWD"), ft_strdup(getenv("HOME")));
+		replace_envar(envhead, ft_strdup("OLDPWD"), ft_strdup(buf));
 		shell->exit_status = 1;
 		return (1);
 	}
-	if (instru->next->str[0] == '~')
-		transformtilde(instru->next);
+	if (instru->next->str[0] == '~' || instru->next->str[0] == '-')
+		transformtilde(instru->next, envhead);
 	if (chdir(instru->next->str) == -1)
 	{
-		perror("cd :");
+		print_err("minishell: cd: ");
+		perror(instru->next->str);
 		shell->exit_status = 1;
 		return (1);
 	}
-	replace_envar(shell->envhead, ft_strdup("PWD"),
-		ft_strdup(getcwd(buf, 1024)));
+	replace_envar(envhead, ft_strdup("OLDPWD"), ft_strdup(buf));
+	replace_envar(envhead, ft_strdup("PWD"), ft_strdup(getcwd(buf, 1024)));
 	shell->exit_status = 0;
 	return (2);
 }

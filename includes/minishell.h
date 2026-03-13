@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:01 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/13 01:38:47 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/13 18:36:12 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int			quotes_closed(char *str);
 int			has_quotes(char *str);
 
 // ===== BUILTINS =====
-int			builtincd(t_instru *instru, t_shell *shell);
+int			builtincd(t_instru *instru, t_envar *envhead, t_shell *shell);
 int			builtinecho(t_instru *instru, t_shell *shell);
 int			builtinpwd(t_shell *shell);
 int			builtinexport(t_instru *instru, t_envar *envhead,
@@ -127,6 +127,7 @@ void		formatenv(char *env, t_envar *envhead);
 void		handle_envar(t_shell *shell);
 char		*expand(char *str, t_shell *shell, int in_s, int in_d);
 char		*get_cmd(char *cmd, char **env);
+char		*get_evvalue(char *str, t_envar *envar);
 
 // ===== PRINT / ENV DISPLAY =====
 void		print_env(t_envar *head);
@@ -149,7 +150,7 @@ t_instru	*skip_current_command(t_instru *node);
 void		handle_error(t_shell *shell, char **env,
 				char **split_cmd, char *path);
 int			handle_error_builtinexport(char *str, t_shell *shell);
-void		transformtilde(t_instru *instru);
+void		transformtilde(t_instru *instru, t_envar *envhead);
 char		*ft_join_instru(t_instru *instru);
 char		*ft_unquote(char *s1, int size);
 void		increment_double_int(int *i, int *j);
