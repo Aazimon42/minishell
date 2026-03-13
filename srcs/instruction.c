@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 08:11:26 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/12 23:34:43 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/13 02:04:34 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,13 +116,9 @@ char	*ft_join_instru(t_instru *instru)
 				instru = instru->next;
 			continue ;
 		}
-		tmp = cmd;
-		cmd = ft_strjoin(cmd, " ");
-		free(tmp);
-		if (!cmd)
-			return (0);
-		tmp = cmd;
-		cmd = ft_strjoin(cmd, instru->next->unquoted);
+		tmp = ft_strjoin(cmd, " ");
+		free(cmd);
+		cmd = ft_strjoin(tmp, instru->next->unquoted);
 		free(tmp);
 		if (!cmd)
 			return (0);
