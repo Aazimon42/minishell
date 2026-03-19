@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 09:32:53 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/10 19:54:45 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/19 18:46:44 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ void	print_export(t_envar *head)
 		min = NULL;
 		while (tmp)
 		{
-			if (!last_printed || strcmp(tmp->name, last_printed) > 0)
+			if (!last_printed || ft_strcmp(tmp->name, last_printed) > 0)
 			{
-				if (!min || (min && strcmp(tmp->name, min->name) < 0))
+				if (!min || (min && ft_strcmp(tmp->name, min->name) < 0))
 					min = tmp;
 			}
 			tmp = tmp->next;
