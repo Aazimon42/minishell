@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:43:03 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/13 18:29:11 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/19 22:17:52 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,12 +110,8 @@ int	execute_one_command(t_shell *shell)
 		if (shell->instru)
 			shell->instru = shell->instru->next;
 	}
-	if (!shell->instru)
-	{
-		restore_fds(shell->save_stdin, shell->save_stdout);
-		return (1);
-	}
-	builtexec(shell);
+	if (shell->instru)
+		builtexec(shell);
 	restore_fds(shell->save_stdin, shell->save_stdout);
 	shell->instru = head;
 	return (1);

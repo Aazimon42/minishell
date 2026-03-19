@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:25:40 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/13 18:42:25 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/19 21:43:34 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 int	builtincd(t_instru *instru, t_envar *envhead, t_shell *shell)
 {
 	char	buf[1024];
+	char	*tmp;
 
-	getcwd(buf, 1024);
+	tmp = getcwd(buf, 1024);
 	if (!instru->next || (instru->next->type != TEXT))
 	{
 		if (chdir(getenv("HOME")) == -1)
@@ -26,8 +27,7 @@ int	builtincd(t_instru *instru, t_envar *envhead, t_shell *shell)
 		shell->exit_status = 1;
 		return (1);
 	}
-	if (instru->next->str[0] == '~' || instru->next->str[0] == '-')
-		transformtilde(instru->next, envhead);
+	transformtilde(instru->next, envhead);
 	if (chdir(instru->next->str) == -1)
 	{
 		print_err("minishell: cd: ");
@@ -35,7 +35,7 @@ int	builtincd(t_instru *instru, t_envar *envhead, t_shell *shell)
 		shell->exit_status = 1;
 		return (1);
 	}
-	replace_envar(envhead, ft_strdup("OLDPWD"), ft_strdup(buf));
+	replace_envar(envhead, ft_strdup("OLDPWD"), ft_strdup(tmp));
 	replace_envar(envhead, ft_strdup("PWD"), ft_strdup(getcwd(buf, 1024)));
 	shell->exit_status = 0;
 	return (2);
