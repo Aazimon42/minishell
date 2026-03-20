@@ -6,7 +6,7 @@
 /*   By: edi-maio <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 19:30:45 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/01/29 04:14:19 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/20 17:14:37 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,6 @@ void	ft_lstdelone(t_list *lst, void (*del)(void *));
 void	ft_lstclear(t_list **lst, void (*del)(void *));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
-char	*ft_strjoin_gnl(char *s1, char *s2);
-char	*ft_substr_gnl(char *s1, char *s2, size_t start, size_t len);
-ssize_t	ft_strchr_gnl(const char *str, int c, ssize_t nb_read);
 char	*get_next_line(int fd);
 
 #endif

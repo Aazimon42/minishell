@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 22:45:17 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/13 18:38:54 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/20 15:58:38 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,15 @@ void	print_err(char *str)
 void	transformtilde(t_instru *instru, t_envar *envhead)
 {
 	char	*tofree;
+	char	*tmp;
 
 	tofree = instru->str;
 	if (instru->str[0] == '~')
 	{
-		instru->str = ft_strjoin(getenv("HOME"), instru->str + 1);
+		tmp = get_evvalue("HOME", envhead);
+		if (!tmp)
+			return ;
+		instru->str = ft_strjoin(tmp, instru->str + 1);
 		free(tofree);
 	}
 	if (instru->str[0] == '-' && ft_strlen(instru->str) == 1)

@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:01 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/13 18:36:12 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/20 16:42:21 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ typedef struct s_shell
 	int			exit_status;
 	int			save_stdin;
 	int			save_stdout;
+	int			tty;
 }				t_shell;
 
 typedef enum e_redir

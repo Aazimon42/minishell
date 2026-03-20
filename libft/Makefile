@@ -6,13 +6,13 @@
 #    By: edi-maio <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:37:20 by edi-maio          #+#    #+#              #
-#    Updated: 2026/03/19 21:31:40 by edi-maio         ###   ########.fr        #
+#    Updated: 2026/03/20 17:14:59 by edi-maio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libft.a
 
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 
 HEADER = libft.h
 

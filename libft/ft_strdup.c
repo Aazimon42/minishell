@@ -6,7 +6,7 @@
 /*   By: edi-maio <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 15:42:39 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/19 21:33:12 by edi-maio         ###   ########.fr       */
+/*   Updated: 2025/10/16 16:40:12 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static char	*ft_strcpy(char *dest, const char *src)
 	int	i;
 
 	i = 0;
-	while (src && src[i] != '\0')
+	while (src[i] != '\0')
 	{
 		dest[i] = src[i];
 		i++;

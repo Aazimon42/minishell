@@ -6,13 +6,13 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:25:40 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/19 21:43:34 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/20 15:46:48 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	builtincd(t_instru *instru, t_envar *envhead, t_shell *shell)
+int	builtincd(t_instru *instru, t_envar *ev, t_shell *shell)
 {
 	char	buf[1024];
 	char	*tmp;
@@ -20,14 +20,14 @@ int	builtincd(t_instru *instru, t_envar *envhead, t_shell *shell)
 	tmp = getcwd(buf, 1024);
 	if (!instru->next || (instru->next->type != TEXT))
 	{
-		if (chdir(getenv("HOME")) == -1)
+		if (chdir(get_evvalue("HOME", ev)) == -1)
 			perror("minishell: cd:");
-		replace_envar(envhead, ft_strdup("PWD"), ft_strdup(getenv("HOME")));
-		replace_envar(envhead, ft_strdup("OLDPWD"), ft_strdup(buf));
+		replace_envar(ev, ft_strdup("PWD"), ft_strdup(get_evvalue("HOME", ev)));
+		replace_envar(ev, ft_strdup("OLDPWD"), ft_strdup(buf));
 		shell->exit_status = 1;
 		return (1);
 	}
-	transformtilde(instru->next, envhead);
+	transformtilde(instru->next, ev);
 	if (chdir(instru->next->str) == -1)
 	{
 		print_err("minishell: cd: ");
@@ -35,8 +35,8 @@ int	builtincd(t_instru *instru, t_envar *envhead, t_shell *shell)
 		shell->exit_status = 1;
 		return (1);
 	}
-	replace_envar(envhead, ft_strdup("OLDPWD"), ft_strdup(tmp));
-	replace_envar(envhead, ft_strdup("PWD"), ft_strdup(getcwd(buf, 1024)));
+	replace_envar(ev, ft_strdup("OLDPWD"), ft_strdup(tmp));
+	replace_envar(ev, ft_strdup("PWD"), ft_strdup(getcwd(buf, 1024)));
 	shell->exit_status = 0;
 	return (2);
 }

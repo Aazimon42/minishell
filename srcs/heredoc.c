@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 21:37:30 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/13 01:34:40 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/20 17:31:26 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,10 @@ static int	read_heredoc_lines(int fd[2], char *delim, t_shell *shell, int exp)
 	signal(SIGINT, handle_sigint_heredoc);
 	while (1)
 	{
-		line = readline("> ");
+		if (!shell->tty)
+			line = get_next_line(0);
+		else
+			line = readline("> ");
 		if (!line)
 		{
 			if (handle_heredoc_end(fd, shell, delim) == -2)

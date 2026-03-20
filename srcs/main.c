@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:47 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/20 12:59:21 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/20 17:33:46 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,10 @@ static int	minishell_logic(t_shell *shell, char *str)
 	{
 		signal(SIGINT, handle_sigint);
 		signal(SIGQUIT, SIG_IGN);
-		str = readline(rainbow_prompt());
+		if (!shell->tty)
+			str = get_next_line(0);
+		else
+			str = readline(rainbow_prompt());
 		if (!str)
 		{
 			free_instru(shell->instru);
@@ -72,5 +75,7 @@ int	main(int ac, char **av, char **env)
 	shell.exit_status = 0;
 	shell.save_stdin = -1;
 	shell.save_stdout = -1;
+	shell.tty = isatty(STDIN_FILENO);
 	minishell_logic(&shell, str);
+	return (shell.exit_status);
 }

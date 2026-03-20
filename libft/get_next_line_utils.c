@@ -6,11 +6,23 @@
 /*   By: edi-maio <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 15:55:06 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/01/29 04:14:05 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/20 17:43:15 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "get_next_line.h"
+
+size_t	slen(const char *str)
+{
+	int	i;
+
+	if (!str)
+		return (0);
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
 
 char	*ft_strjoin_gnl(char *s1, char *s2)
 {
@@ -19,11 +31,11 @@ char	*ft_strjoin_gnl(char *s1, char *s2)
 
 	if (!s1)
 	{
-		str = ft_strdup(s2);
+		str = ft_strdup_gnl(s2);
 		return (str);
 	}
 	i = 0;
-	str = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	str = malloc(slen(s1) + slen(s2) + 1);
 	if (!str)
 		return (0);
 	while (s1[i])
@@ -41,12 +53,12 @@ char	*ft_strjoin_gnl(char *s1, char *s2)
 	return (str);
 }
 
-char	*ft_strdup(const char *src)
+char	*ft_strdup_gnl(const char *src)
 {
 	char	*dest;
 	int		i;
 
-	dest = malloc(ft_strlen(src) * sizeof (char) + 1);
+	dest = malloc(slen(src) * sizeof (char) + 1);
 	if (!dest)
 		return (0);
 	i = 0;
@@ -67,10 +79,10 @@ char	*ft_substr_gnl(char *s1, char *s2, size_t start, size_t len)
 
 	if (!s1 || !s2)
 		return (0);
-	if (start > ft_strlen(s1))
+	if (start > slen(s1))
 		size = 0;
 	else
-		size = ft_strlen(s1) - start;
+		size = slen(s1) - start;
 	if (size > len)
 		size = len;
 	subs = malloc(size + 1);
@@ -80,6 +92,8 @@ char	*ft_substr_gnl(char *s1, char *s2, size_t start, size_t len)
 	while (s1[start] && i < len)
 		subs[i++] = s1[start++];
 	subs[i] = '\0';
+	if (subs[slen(subs) - 1] == '\n')
+		subs[i - 1] = '\0';
 	free(s2);
 	return (subs);
 }
@@ -90,8 +104,8 @@ ssize_t	ft_strchr_gnl(const char *str, int c, ssize_t nb_read)
 
 	if (!str)
 		return (-1);
-	if (nb_read == 0 && ft_strlen(str))
-		return (ft_strlen(str) - 1);
+	if (nb_read == 0 && slen(str))
+		return (slen(str) - 1);
 	i = 0;
 	while (str[i])
 	{
