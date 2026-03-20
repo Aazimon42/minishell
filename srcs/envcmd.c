@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 06:18:34 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/13 18:24:54 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/20 18:17:05 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,10 +99,10 @@ void	handle_envar(t_shell *shell)
 		{
 			head->unquoted = expanded;
 			free(tmp);
+			tmp = head->str;
+			head->str = ft_unquote(head->unquoted, ft_strlen(head->unquoted));
+			free(tmp);
 		}
-		tmp = head->str;
-		head->str = ft_unquote(head->unquoted, ft_strlen(head->unquoted));
-		free(tmp);
 		head = head->next;
 	}
 }

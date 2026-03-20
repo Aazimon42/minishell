@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:01 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/20 16:42:21 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/20 18:19:47 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,15 @@
 # include <sys/wait.h>
 # include <sys/ioctl.h>
 
-# define RED "\033[91m"
-# define ORANGE "\033[93m"
-# define YELLOW "\033[93m"
-# define GREEN "\033[92m"
-# define CYAN "\001\033[36m\002"
-# define BLUE "\033[94m"
-# define INDIGO "\033[95m"
-# define VIOLET "\033[95m"
-# define RESET "\033[0m"
-
+# define RED     "\001\033[91m\002"
+# define ORANGE  "\001\033[93m\002"
+# define YELLOW  "\001\033[93m\002"
+# define GREEN   "\001\033[92m\002"
+# define CYAN    "\001\033[36m\002"
+# define BLUE    "\001\033[94m\002"
+# define INDIGO  "\001\033[95m\002"
+# define VIOLET  "\001\033[95m\002"
+# define RESET   "\001\033[0m\002"
 # define TEXT 1
 # define SEPARATOR 2
 # define PIPE 3
