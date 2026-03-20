@@ -6,7 +6,7 @@
 /*   By: malebrun <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 10:09:59 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/13 01:53:50 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/20 18:31:33 by malebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 static int	is_numeric(const char *s)
 {
-	long long	n;
-	int			neg;
-	int			i;
+	unsigned long long	n;
+	int					neg;
+	int					i;
 
 	n = 0;
 	i = 0;
@@ -31,7 +31,8 @@ static int	is_numeric(const char *s)
 	{
 		if (s[i] < '0' || s[i] > '9')
 			return (0);
-		if (n > (9223372036854775807LL - (s[i] - '0')) / 10)
+		if ((!neg && n > (9223372036854775807ULL - (s[i] - '0')) / 10)
+			|| (neg && n > (9223372036854775808ULL - (s[i] - '0')) / 10))
 			return (0);
 		n = n * 10 + (s[i++] - '0');
 	}
