@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 18:02:40 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/12 20:36:14 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/20 13:02:28 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@ int	count_pipes(t_instru *instru)
 
 static void	exec_child(t_shell *shell, int fd_in, int fd_out)
 {
+	t_instru	*head;
+
+	head = shell->instru;
 	if (fd_in != STDIN_FILENO)
 	{
 		dup2(fd_in, STDIN_FILENO);
@@ -39,8 +42,15 @@ static void	exec_child(t_shell *shell, int fd_in, int fd_out)
 		close(fd_out);
 	}
 	apply_redirections(shell->instru, collect_heredocs(shell));
-	builtexec(shell);
-	free_instru(shell->instru);
+	while (shell->instru && shell->instru->type == SEPARATOR)
+	{
+		shell->instru = shell->instru->next;
+		if (shell->instru)
+			shell->instru = shell->instru->next;
+	}
+	if (shell->instru)
+		builtexec(shell);
+	free_instru(head);
 	free_envar(shell->envhead);
 	exit(shell->exit_status);
 }
