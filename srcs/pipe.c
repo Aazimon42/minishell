@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 18:02:40 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/22 16:25:12 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/22 18:30:34 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,10 @@ int	count_pipes(t_instru *instru)
 	return (count);
 }
 
-static void	exec_child(t_shell *shell, int fd_in, int fd_out)
+static void	exec_child(t_shell *shell, t_instru *instru, int fd_in, int fd_out)
 {
-	t_instru	*head;
 	int			heredoc_fd;
 
-	head = shell->instru;
 	heredoc_fd = collect_heredocs(shell);
 	if (fd_in != STDIN_FILENO)
 	{
@@ -52,7 +50,7 @@ static void	exec_child(t_shell *shell, int fd_in, int fd_out)
 	}
 	if (shell->instru)
 		builtexec(shell);
-	free_instru(head);
+	free_instru(instru);
 	free_envar(shell->envhead);
 	exit(shell->exit_status);
 }
@@ -75,7 +73,7 @@ static int	run_pipe_segment(t_shell *shell, int fd_in, int *fd_out)
 	{
 		if (*fd_out != STDOUT_FILENO)
 			close(pipefd[0]);
-		exec_child(shell, fd_in, *fd_out);
+		exec_child(shell, shell->instru, fd_in, *fd_out);
 	}
 	if (fd_in != STDIN_FILENO)
 		close(fd_in);
