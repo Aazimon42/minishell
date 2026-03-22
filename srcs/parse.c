@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 05:02:40 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/12 21:16:32 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/22 17:59:01 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,14 +71,12 @@ t_instru	*slicer(char *str)
 	t_instru	*temp;
 	t_instru	*instru;
 
-	if (ft_strlen(str) == 0)
-		return (NULL);
 	i = 0;
 	instru = NULL;
 	head = NULL;
-	while ((size_t)i < ft_strlen(str) && str[i])
+	while (str[i] && (size_t)i < ft_strlen(str))
 	{
-		while (str[i] == ' ')
+		while (str[i] == ' ' || str[i] == '\t')
 			i++;
 		if (!str[i])
 			break ;
@@ -89,5 +87,6 @@ t_instru	*slicer(char *str)
 			head = instru;
 		i += len;
 	}
+	free(str);
 	return (head);
 }

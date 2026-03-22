@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 08:11:26 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/20 18:24:04 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/22 17:47:30 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,32 +97,4 @@ t_instru	*init_instruction(t_instru *before, char *value, int size, int type)
 	temp->type = type;
 	temp->next = NULL;
 	return (temp);
-}
-
-char	*ft_join_instru(t_instru *instru)
-{
-	char	*tmp;
-	char	*cmd;
-
-	cmd = ft_strdup(instru->str);
-	if (!cmd)
-		return (0);
-	while (instru->next && instru->next->type != PIPE)
-	{
-		if (instru->next->type == SEPARATOR)
-		{
-			instru = instru->next;
-			if (instru->next)
-				instru = instru->next;
-			continue ;
-		}
-		tmp = ft_strjoin(cmd, " ");
-		free(cmd);
-		cmd = ft_strjoin(tmp, instru->next->unquoted);
-		free(tmp);
-		if (!cmd)
-			return (0);
-		instru = instru->next;
-	}
-	return (cmd);
 }

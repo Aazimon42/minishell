@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:43:03 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/20 12:55:59 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/22 18:17:57 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,15 @@
 void	executeve(t_shell *shell)
 {
 	char	**split_cmd;
-	char	*cmd;
 	char	*path;
 	char	**env;
 
-	cmd = ft_join_instru(shell->instru);
 	env = split_env(shell->envhead);
-	split_cmd = ft_split(cmd, ' ');
+	split_cmd = split_instru(shell->instru);
 	if (split_cmd[0] && access(split_cmd[0], F_OK) == 0)
 		path = split_cmd[0];
 	else
 		path = get_cmd(split_cmd[0], env);
-	free(cmd);
 	free_instru(shell->instru);
 	free_envar(shell->envhead);
 	handle_error(shell, env, split_cmd, path);
@@ -120,7 +117,10 @@ int	execute_one_command(t_shell *shell)
 void	execute(t_shell *shell)
 {
 	if (!check_syntax(shell->instru))
+	{
+		shell->exit_status = 2;
 		return ;
+	}
 	if (count_pipes(shell->instru) > 0)
 	{
 		execute_pipeline(shell, 0, STDIN_FILENO);

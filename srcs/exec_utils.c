@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 18:18:05 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/13 01:19:42 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/22 18:16:44 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int	check_syntax(t_instru *instru)
 		print_err("minishell: syntax error near unexpected token `|'\n");
 		return (0);
 	}
-	while (tmp->next)
+	while (tmp && tmp->next)
 	{
 		if (tmp->type == SEPARATOR && tmp->next && tmp->next->type == SEPARATOR)
 		{

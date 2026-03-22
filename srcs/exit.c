@@ -6,7 +6,7 @@
 /*   By: malebrun <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 10:09:59 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/20 18:31:33 by malebrun         ###   ########.fr       */
+/*   Updated: 2026/03/22 18:23:08 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	free_instru(t_instru *instru)
 		free(instru);
 		instru = temp;
 	}
+	instru = NULL;
 }
 
 void	free_envar(t_envar *head)
@@ -76,7 +77,7 @@ void	builtinexit(t_instru *instru, t_envar *head, t_shell *shell)
 	print_err("exit\n");
 	if (!instru->next || instru->next->type == PIPE)
 		errcode = shell->exit_status;
-	else if (instru->next && !is_numeric(instru->next->str))
+	else if (instru->next && !is_numeric(instru->next->unquoted))
 	{
 		shell->exit_status = 2;
 		print_err("minishell: exit: ");
@@ -91,7 +92,7 @@ void	builtinexit(t_instru *instru, t_envar *head, t_shell *shell)
 		return ;
 	}
 	else
-		errcode = ft_atoi(instru->next->str) % 256;
+		errcode = ft_atoi(instru->next->unquoted) % 256;
 	free_instru(instru);
 	free_envar(head);
 	restore_fds(shell->save_stdin, shell->save_stdout);

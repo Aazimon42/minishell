@@ -6,7 +6,7 @@
 /*   By: edi-maio <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 02:15:33 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/12 23:19:32 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/22 15:45:08 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ int	handle_error_builtinexport(char *str, t_shell *shell)
 	{
 		print_err("minishell: export : '");
 		print_err(str);
-		print_err("': not a valide identifier\n");
+		print_err("': not a valid identifier\n");
+		free(str);
 		shell->exit_status = 1;
 		return (0);
 	}

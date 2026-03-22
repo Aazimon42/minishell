@@ -29,7 +29,7 @@ Run the program by passing no arguments:
 
 ### References
 
-- Official philosophers subject (42 intranet)
+- Official minishell subject (42 intranet)
 - Documentation on bash behaviour
 
 ### Use of AI

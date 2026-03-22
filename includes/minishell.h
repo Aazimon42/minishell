@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:01 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/20 18:19:47 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/22 17:55:48 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ void		handle_error(t_shell *shell, char **env,
 				char **split_cmd, char *path);
 int			handle_error_builtinexport(char *str, t_shell *shell);
 void		transformtilde(t_instru *instru, t_envar *envhead);
-char		*ft_join_instru(t_instru *instru);
+char		**split_instru(t_instru *instru);
 char		*ft_unquote(char *s1, int size);
 void		increment_double_int(int *i, int *j);
 int			is_fullalnum(char *str);

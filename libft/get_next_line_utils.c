@@ -6,7 +6,7 @@
 /*   By: edi-maio <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 15:55:06 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/20 17:43:15 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/22 17:28:12 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ char	*ft_substr_gnl(char *s1, char *s2, size_t start, size_t len)
 	while (s1[start] && i < len)
 		subs[i++] = s1[start++];
 	subs[i] = '\0';
-	if (subs[slen(subs) - 1] == '\n')
+	if (i > 0 && subs[slen(subs) - 1] == '\n')
 		subs[i - 1] = '\0';
 	free(s2);
 	return (subs);

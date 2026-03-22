@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 17:14:47 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/20 18:15:52 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/22 17:57:48 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,9 @@ static int	minishell_logic(t_shell *shell, char *str)
 			continue ;
 		add_history(str);
 		shell->instru = slicer(str);
-		free(str);
 		execute(shell);
 		free_instru(shell->instru);
+		shell->instru = NULL;
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 22:45:17 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/20 15:58:38 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/22 17:02:06 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,54 @@ void	transformtilde(t_instru *instru, t_envar *envhead)
 		instru->str = ft_strdup(get_evvalue("OLDPWD", envhead));
 		free(tofree);
 	}
+}
+
+static char	**fill_split(t_instru	*instru, char **split_cmd, int size)
+{
+	int	i;
+
+	i = 0;
+	while (split_cmd && i < size)
+	{
+		if (instru && instru->type == SEPARATOR)
+		{
+			instru = instru->next;
+			if (instru->next)
+				instru = instru->next;
+		}
+		split_cmd[i] = ft_strdup(instru->unquoted);
+		instru = instru->next;
+		if (!split_cmd[i])
+		{
+			free2d(split_cmd);
+			return (0);
+		}
+		i++;
+	}
+	split_cmd[i] = NULL;
+	return (split_cmd);
+}
+
+char	**split_instru(t_instru *instru)
+{
+	int			size;
+	t_instru	*tmp;
+	char		**split_cmd;
+
+	size = 0;
+	tmp = instru;
+	while (instru && instru->type != PIPE)
+	{
+		instru = instru->next;
+		if (instru && instru->type == SEPARATOR)
+		{
+			instru = instru->next;
+			if (instru->next)
+				instru = instru->next;
+		}
+		size++;
+	}
+	split_cmd = malloc(sizeof(char *) * (size + 1));
+	split_cmd = fill_split(tmp, split_cmd, size);
+	return (split_cmd);
 }
