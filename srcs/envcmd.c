@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 06:18:34 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/20 18:17:05 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/24 16:10:41 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,18 +89,18 @@ void	handle_envar(t_shell *shell)
 	char		*expanded;
 
 	head = shell->instru;
-	while (head && head->type == TEXT)
+	while (head && head->type != PIPE)
 	{
-		tmp = head->unquoted;
+		tmp = head->str;
 		expanded = expand(head->str, shell, 0, 0);
 		if (!ft_strcmp(head->str, expanded))
 			free(expanded);
 		else
 		{
-			head->unquoted = expanded;
+			head->str = expanded;
 			free(tmp);
-			tmp = head->str;
-			head->str = ft_unquote(head->unquoted, ft_strlen(head->unquoted));
+			tmp = head->unquoted;
+			head->unquoted = ft_unquote(head->str, ft_strlen(head->str));
 			free(tmp);
 		}
 		head = head->next;

@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 22:45:17 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/22 17:02:06 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/24 16:13:46 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ static char	**fill_split(t_instru	*instru, char **split_cmd, int size)
 			instru = instru->next;
 			if (instru->next)
 				instru = instru->next;
+			continue ;
 		}
 		split_cmd[i] = ft_strdup(instru->unquoted);
 		instru = instru->next;
@@ -90,13 +91,14 @@ char	**split_instru(t_instru *instru)
 	tmp = instru;
 	while (instru && instru->type != PIPE)
 	{
-		instru = instru->next;
 		if (instru && instru->type == SEPARATOR)
 		{
 			instru = instru->next;
 			if (instru->next)
 				instru = instru->next;
+			continue ;
 		}
+		instru = instru->next;
 		size++;
 	}
 	split_cmd = malloc(sizeof(char *) * (size + 1));

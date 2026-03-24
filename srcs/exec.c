@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:43:03 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/22 18:17:57 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/24 15:58:36 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	executeve(t_shell *shell)
 	handle_error(shell, env, split_cmd, path);
 	execve(path, split_cmd, env);
 	print_err("minishell: execve: format error\n");
+	free(path);
 	free2d(env);
 	free2d(split_cmd);
 	restore_fds(shell->save_stdin, shell->save_stdout);
@@ -39,7 +40,6 @@ int	builtexec(t_shell *shell)
 {
 	int		executed;
 
-	handle_envar(shell);
 	executed = 0;
 	if (!ft_strcmp(shell->instru->unquoted, "cd"))
 		executed += builtincd(shell->instru, shell->envhead, shell);
@@ -93,6 +93,7 @@ int	execute_one_command(t_shell *shell)
 {
 	t_instru	*head;
 
+	handle_envar(shell);
 	head = shell->instru;
 	shell->save_stdin = dup(STDIN_FILENO);
 	shell->save_stdout = dup(STDOUT_FILENO);
