@@ -6,7 +6,7 @@
 /*   By: malebrun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 02:43:03 by malebrun          #+#    #+#             */
-/*   Updated: 2026/03/24 15:58:36 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/27 17:18:03 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,12 @@ int	apply_redirections(t_instru *cmd, int heredoc_fd)
 	while (tmp && tmp->type != PIPE)
 	{
 		separator = get_redir_type(tmp);
-		if (separator == R_OUT)
-			handle_redirect(tmp);
-		else if (separator == R_APPEND)
-			handle_append(tmp);
-		else if (separator == R_IN)
-			handle_redirect_in(tmp);
+		if (separator == R_OUT && handle_redirect(tmp) == -1)
+			return (0);
+		else if (separator == R_APPEND && handle_append(tmp) == -1)
+			return (0);
+		else if (separator == R_IN && handle_redirect_in(tmp) == -1)
+			return (0);
 		if (separator)
 			tmp = tmp->next;
 		if (tmp)

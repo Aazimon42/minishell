@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 05:02:40 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/24 16:03:52 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/27 17:54:33 by edi-maio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static int	get_end_instru(char *str)
 			if (str[i] == quote)
 				i++;
 		}
-		if (str[i] == ' ' || is_forbidenchar(&str[i]))
+		if (str[i] == ' ' || str[i] == '\t' || is_forbidenchar(&str[i]))
 			break ;
 		i++;
 	}
