@@ -6,7 +6,7 @@
 /*   By: edi-maio <edi-maio@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 22:45:17 by edi-maio          #+#    #+#             */
-/*   Updated: 2026/03/24 16:13:46 by edi-maio         ###   ########.fr       */
+/*   Updated: 2026/03/27 16:25:03 by malebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static char	**fill_split(t_instru	*instru, char **split_cmd, int size)
 		if (instru && instru->type == SEPARATOR)
 		{
 			instru = instru->next;
-			if (instru->next)
+			if (instru)
 				instru = instru->next;
 			continue ;
 		}
@@ -94,7 +94,7 @@ char	**split_instru(t_instru *instru)
 		if (instru && instru->type == SEPARATOR)
 		{
 			instru = instru->next;
-			if (instru->next)
+			if (instru)
 				instru = instru->next;
 			continue ;
 		}
